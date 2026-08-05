@@ -1,0 +1,20 @@
+.layout{
+    display:flex;
+}
+
+.mainContent{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    transition:all .35s ease;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+.mainContent.collapsed{
+    margin-left:90px;
+    width:calc(100% - 90px);
+}
+
+.pageContent{
+    padding:30px;
+}
