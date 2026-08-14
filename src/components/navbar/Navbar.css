@@ -61,13 +61,46 @@
 
 .loginBtn{
     width:auto !important;
-    padding:0 16px;
     display:flex;
     align-items:center;
-    gap:8px;
-    font-weight:500;
+    gap:10px;
+    padding:12px 20px;
+    background:#FFFFFF;
+    border-radius:14px;
+    color:var(--text);
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
 .loginBtn svg{
     font-size:21px;
+}
+.loginBtn:hover{
+    background:var(--sidebar-hover);
+    color:white;
+}
+
+.rightSection{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.dateSection{
+    text-align:right;
+}
+
+.dateSection h4{
+    font-size:16px;
+    color:var(--text);
+    margin:0;
+}
+
+.dateSection p{
+    font-size:13px;
+    color:#728A6E;
+    margin-top:4px;
 }

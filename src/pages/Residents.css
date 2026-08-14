@@ -1,0 +1,98 @@
+.residents {
+  width: 100%;
+}
+
+.residentsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.residentsHeader h2 {
+  font-size: 32px;
+  margin: 0;
+  color: var(--text);
+}
+
+.residentsHeader p {
+  margin-top: 5px;
+  color: #718579;
+}
+
+.addResidentBtn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #324d3e;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.residentSearch {
+  margin-bottom: 20px;
+}
+
+.residentSearch input {
+  width: 100%;
+  max-width: 400px;
+  padding: 13px 16px;
+  border: 1px solid #d4ddd3;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+.residentsTable {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.residentsTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.residentsTable th,
+.residentsTable td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.residentsTable th {
+  color: #58735a;
+  font-size: 14px;
+}
+
+.residentsTable td {
+  color: #294936;
+}
+
+.status {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.stable {
+  background: #dce8d9;
+  color: #3f6547;
+}
+
+.attention {
+  background: #f4e6c4;
+  color: #856b28;
+}
+
+.viewBtn {
+  border: none;
+  background: #d9e4d6;
+  color: #324d3e;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
