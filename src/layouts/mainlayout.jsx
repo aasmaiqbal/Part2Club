@@ -1,26 +1,40 @@
-import { useState } from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import "./MainLayout.css";
 
-function MainLayout({ children }) {
-    const [collapsed, setCollapsed] = useState(false);
-    return (
-        <div className="layout">
-            <Sidebar
-                collapsed={collapsed}
-                setCollapsed={setCollapsed}
-            />
-            <main
-                className={collapsed ? "mainContent collapsed" : "mainContent"}
-            >
-                <Navbar />
-                <div className="pageContent">
-                    {children}
-                </div>
-            </main>
+function MainLayout({
+  children,
+  collapsed,
+  setCollapsed,
+  currentPage,
+  onNavigate,
+}) {
+  return (
+    <div className={collapsed ? "layout collapsedLayout" : "layout"}>
+
+      {/* Sidebar */}
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        currentPage={currentPage}
+        onNavigate={onNavigate}
+      />
+
+      {/* Main Area */}
+      <main className="mainContent">
+
+        {/* Navbar */}
+        <Navbar />
+
+        {/* Current Page */}
+        <div className="pageContent">
+          {children}
         </div>
-    );
+
+      </main>
+
+    </div>
+  );
 }
 
 export default MainLayout;

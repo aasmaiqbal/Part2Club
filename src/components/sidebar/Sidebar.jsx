@@ -29,38 +29,52 @@ const menuItems = [
   { title: "Settings", icon: <FaCog /> },
 ];
 
-import {useState} from "react";
-function Sidebar({ collapsed, setCollapsed }) {
+function Sidebar({
+  collapsed,
+  setCollapsed,
+  currentPage,
+  onNavigate,
+}) {
   return (
     <aside className={collapsed ? "sidebar collapsed" : "sidebar"}>
 
+      {/* Top Section */}
       <div className="topSection">
 
-        <button className="menuBtn" onClick={()=>setCollapsed(!collapsed)}>
+        <button
+          className="menuBtn"
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
           <FaBars />
         </button>
 
         <div className="logoSection">
-          <h2>🌿 Part2Club </h2>
+          <h2>🌿 Part2Club</h2>
           <p>Elderly home care management</p>
         </div>
 
       </div>
 
+      {/* Menu Heading */}
       <div className="menuHeading">
         MAIN MENU
       </div>
 
+      {/* Navigation */}
       <ul className="menuList">
-        {menuItems.map((item, index) => (
+
+        {menuItems.map((item) => (
           <li
             key={item.title}
-            className={index === 0 ? "active" : ""}
+            className={currentPage === item.title ? "active" : ""}
+            onClick={() => onNavigate(item.title)}
           >
             {item.icon}
             <span>{item.title}</span>
           </li>
         ))}
+
       </ul>
 
     </aside>
