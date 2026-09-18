@@ -1,0 +1,406 @@
+.staff {
+  width: 100%;
+}
+
+.staffHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.staffHeader h2 {
+  font-size: 32px;
+  margin: 0;
+  color: var(--text);
+}
+
+.staffHeader p {
+  margin-top: 5px;
+  color: #718579;
+}
+
+.addStaffBtn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #324d3e;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.addStaffBtn:hover,
+.staffSaveBtn:hover {
+  background: #496969;
+}
+
+.staffSearch {
+  margin-bottom: 20px;
+}
+
+.staffSearch input {
+  width: 100%;
+  max-width: 400px;
+  padding: 13px 16px;
+  border: 1px solid #d4ddd3;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.staffSearch input:focus {
+  border-color: #6b9080;
+}
+
+.staffTable {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.staffTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staffTable th,
+.staffTable td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.staffTable th {
+  color: #58735a;
+  font-size: 14px;
+}
+
+.staffTable td {
+  color: #294936;
+}
+
+.staffNameCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.staffTablePhoto {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #8ea48b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.staffTablePhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.staffStatus {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.staffActiveStatus {
+  background: #dce8d9;
+  color: #3f6547;
+}
+
+.staffInactiveStatus {
+  background: #f1dddd;
+  color: #8a4d4d;
+}
+
+.staffViewBtn {
+  border: none;
+  background: #d9e4d6;
+  color: #324d3e;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.staffViewBtn:hover {
+  background: #c8d8c5;
+}
+
+.noStaff {
+  text-align: center !important;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.staffProfile {
+  width: 100%;
+}
+
+.staffProfileHeader {
+  margin-bottom: 20px;
+}
+
+.staffProfileHeader h2 {
+  font-size: 32px;
+  margin: 18px 0 0;
+  color: var(--text);
+}
+
+.staffBackBtn {
+  border: none;
+  background: #d9e4d6;
+  color: #324d3e;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.staffBackBtn:hover {
+  background: #c8d8c5;
+}
+
+.staffProfileCard {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(41, 73, 54, 0.06);
+}
+
+.staffProfileTop {
+  display: flex;
+  gap: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.staffProfilePhoto {
+  width: 110px;
+  height: 110px;
+  min-width: 110px;
+  border-radius: 12px;
+  background: #8ea48b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.staffProfilePhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.staffBasicInfo {
+  flex: 1;
+}
+
+.staffInfoRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 20px;
+}
+
+.staffInfoRow span,
+.staffInfoGrid span {
+  display: block;
+  color: #718579;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.staffInfoRow strong,
+.staffInfoGrid strong {
+  color: #294936;
+  font-size: 15px;
+}
+
+.staffProfileSection {
+  padding: 22px 0;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.staffProfileSection h3 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #294936;
+}
+
+.staffInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 40px;
+}
+
+.staffActive {
+  color: #3f6547 !important;
+}
+
+.addStaffForm {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(41, 73, 54, 0.06);
+}
+
+.staffFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.staffFormGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.staffFormGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #294936;
+  margin-bottom: 8px;
+}
+
+.staffFormGroup label span {
+  color: #c94b4b;
+}
+
+.staffFormGroup input,
+.staffFormGroup select,
+.staffFormGroup textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d4ddd3;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #294936;
+  background: white;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.staffFormGroup textarea {
+  resize: vertical;
+}
+
+.staffFormGroup input:focus,
+.staffFormGroup select:focus,
+.staffFormGroup textarea:focus {
+  border-color: #6b9080;
+}
+
+.staffImageGroup {
+  grid-row: span 2;
+}
+
+.staffImageUpload {
+  width: 100%;
+  min-height: 190px;
+  border: 2px dashed #cbd8ca;
+  border-radius: 12px;
+  background: #f8faf7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.3s ease;
+  box-sizing: border-box;
+}
+
+.staffImageUpload:hover {
+  border-color: #6b9080;
+  background: #f2f6f1;
+}
+
+.staffImageUpload input {
+  display: none;
+}
+
+.staffImageUpload img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.staffUploadIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e6eee4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+.staffImageUpload strong {
+  color: #294936;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.staffImageUpload span {
+  color: #718579;
+  font-size: 12px;
+}
+
+.staffFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.staffCancelBtn {
+  border: none;
+  background: #eef2ed;
+  color: #324d3e;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.staffSaveBtn {
+  border: none;
+  background: #324d3e;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .staffFormGrid,
+  .staffInfoGrid,
+  .staffInfoRow {
+    grid-template-columns: 1fr;
+  }
+
+  .staffImageGroup {
+    grid-row: auto;
+  }
+}

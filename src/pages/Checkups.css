@@ -1,0 +1,379 @@
+.checkups {
+  width: 100%;
+}
+
+.checkupPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.checkupPageHeader h2,
+.checkupHeader h2 {
+  color: #294936;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.checkupPageHeader p,
+.checkupHeader p {
+  color: #718579;
+  font-size: 14px;
+}
+
+.addCheckupBtn {
+  background: #6b9080;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.addCheckupBtn:hover {
+  background: #587a6b;
+  transform: translateY(-2px);
+}
+
+.checkupSearch {
+  margin-bottom: 20px;
+}
+
+.checkupSearch input {
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 16px;
+  border: 1px solid #becfbb;
+  border-radius: 10px;
+  background: white;
+  color: #294936;
+  font-size: 14px;
+}
+
+.checkupSearch input:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.12);
+}
+
+.checkupTable {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.checkupTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 950px;
+}
+
+.checkupTable th {
+  background: #f3f7f2;
+  color: #58735a;
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.checkupTable td {
+  padding: 16px;
+  border-top: 1px solid #e5ebe3;
+  color: #294936;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.checkupTable tbody tr:hover {
+  background: #f8faf7;
+}
+
+.checkupNameCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.checkupSmallIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #e6eee4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.tableCompletionCheckbox,
+.completionCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3f6547;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tableCompletionCheckbox input,
+.completionCheckbox input {
+  width: 19px;
+  height: 19px;
+  accent-color: #6b9080;
+  cursor: pointer;
+}
+
+.checkupViewBtn {
+  background: #6b9080;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.checkupViewBtn:hover {
+  background: #587a6b;
+}
+
+.noCheckups {
+  text-align: center;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.checkupBackBtn {
+  background: transparent;
+  color: #52715c;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.checkupBackBtn:hover {
+  color: #294936;
+}
+
+.checkupHeader {
+  margin-bottom: 25px;
+}
+
+.checkupProfileCard {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.checkupTitle {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.checkupIcon {
+  width: 65px;
+  height: 65px;
+  border-radius: 15px;
+  background: #e8f0e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.checkupTitle h3 {
+  color: #294936;
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+
+.checkupTitle span {
+  color: #718579;
+  font-size: 14px;
+}
+
+.checkupInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 25px 0;
+}
+
+.checkupInfoGrid div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.checkupInfoGrid span,
+.checkupDetailSection span {
+  color: #718579;
+  font-size: 13px;
+}
+
+.checkupInfoGrid strong,
+.checkupDetailSection strong {
+  color: #294936;
+  font-size: 14px;
+}
+
+.checkupCompletedText {
+  color: #3f6547 !important;
+}
+
+.checkupPendingText {
+  color: #9a7550 !important;
+}
+
+.checkupDetailSection {
+  padding: 18px;
+  background: #f5f8f4;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.checkupCompletionBox {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #edf4eb;
+  border: 1px solid #d7e5d5;
+}
+
+.completionCheckbox {
+  font-size: 14px;
+}
+
+.addCheckupForm {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.checkupFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.checkupFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.checkupFormGroup label {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.checkupFormGroup label span {
+  color: #c45b5b;
+}
+
+.checkupFormGroup input,
+.checkupFormGroup select,
+.checkupFormGroup textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fbfcfa;
+  color: #294936;
+  font-size: 14px;
+}
+
+.checkupFormGroup input:focus,
+.checkupFormGroup select:focus,
+.checkupFormGroup textarea:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1);
+}
+
+.checkupFormGroup textarea {
+  resize: vertical;
+}
+
+.fullCheckupWidth {
+  grid-column: 1 / -1;
+}
+
+.checkupFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.checkupCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.checkupSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkupSaveBtn:hover {
+  background: #587a6b;
+}
+
+@media (max-width: 850px) {
+  .checkupInfoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .checkupPageHeader {
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 650px) {
+  .checkupPageHeader {
+    flex-direction: column;
+  }
+
+  .checkupFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullCheckupWidth {
+    grid-column: auto;
+  }
+
+  .checkupInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkupProfileCard,
+  .addCheckupForm {
+    padding: 20px;
+  }
+}

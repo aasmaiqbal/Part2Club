@@ -1,0 +1,442 @@
+.medicines {
+  width: 100%;
+}
+
+.medicinePageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.medicinePageHeader h2,
+.medicineHeader h2 {
+  color: #294936;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.medicinePageHeader p,
+.medicineHeader p {
+  color: #718579;
+  font-size: 14px;
+}
+
+.addMedicineBtn {
+  background: #6b9080;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.addMedicineBtn:hover {
+  background: #587a6b;
+  transform: translateY(-2px);
+}
+
+.medicineSearch {
+  margin-bottom: 20px;
+}
+
+.medicineSearch input {
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 16px;
+  border: 1px solid #becfbb;
+  border-radius: 10px;
+  background: white;
+  color: #294936;
+  font-size: 14px;
+}
+
+.medicineSearch input:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.12);
+}
+
+.medicineTable {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.medicineTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.medicineTable th {
+  background: #f3f7f2;
+  color: #58735a;
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.medicineTable td {
+  padding: 16px;
+  border-top: 1px solid #e5ebe3;
+  color: #294936;
+  font-size: 14px;
+}
+
+.medicineTable tbody tr:hover {
+  background: #f8faf7;
+}
+
+.medicineNameCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.medicineSmallIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #e6eee4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.medicineStatus {
+  display: inline-block;
+  background: #e2eee4;
+  color: #3f6547;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.medicineViewBtn {
+  background: #6b9080;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.medicineViewBtn:hover {
+  background: #587a6b;
+}
+
+.noMedicines {
+  text-align: center;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.medicineBackBtn {
+  background: transparent;
+  color: #52715c;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.medicineBackBtn:hover {
+  color: #294936;
+}
+
+.medicineHeader {
+  margin-bottom: 25px;
+}
+
+.medicineProfileCard {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.medicineTitle {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.medicineIcon {
+  width: 65px;
+  height: 65px;
+  border-radius: 15px;
+  background: #e8f0e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.medicineTitle h3 {
+  color: #294936;
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+
+.medicineTitle span {
+  color: #718579;
+  font-size: 14px;
+}
+
+.medicineInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 25px 0;
+}
+
+.medicineInfoGrid div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.medicineInfoGrid span,
+.medicineInstructions span {
+  color: #718579;
+  font-size: 13px;
+}
+
+.medicineInfoGrid strong,
+.medicineInstructions strong {
+  color: #294936;
+  font-size: 14px;
+}
+
+.medicineActive {
+  color: #3f6547 !important;
+}
+
+.medicineInstructions {
+  padding: 18px;
+  background: #f5f8f4;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.medicationAdministration {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid #e1e8df;
+}
+
+.administrationHeader {
+  margin-bottom: 18px;
+}
+
+.administrationHeader h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #294936;
+}
+
+.administrationHeader p {
+  margin-top: 5px;
+  color: #718579;
+  font-size: 13px;
+}
+
+.administrationTable {
+  border: 1px solid #e1e8df;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.administrationRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.5fr 1fr;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.administrationRow:last-child {
+  border-bottom: none;
+}
+
+.administrationRow > span {
+  color: #294936;
+  font-size: 14px;
+}
+
+.administrationTableHeader {
+  background: #f4f7f3;
+}
+
+.administrationTableHeader span {
+  color: #58735a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.medicationCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3f6547;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.medicationCheckbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: #6b9080;
+  cursor: pointer;
+}
+
+.noAdministration {
+  background: #f8faf7;
+  border-radius: 10px;
+  padding: 20px;
+  color: #718579;
+  font-size: 14px;
+  text-align: center;
+}
+
+.addMedicineForm {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.medicineFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.medicineFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.medicineFormGroup label {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.medicineFormGroup label span {
+  color: #c45b5b;
+}
+
+.medicineFormGroup input,
+.medicineFormGroup select,
+.medicineFormGroup textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fbfcfa;
+  color: #294936;
+  font-size: 14px;
+}
+
+.medicineFormGroup input:focus,
+.medicineFormGroup select:focus,
+.medicineFormGroup textarea:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1);
+}
+
+.medicineFormGroup textarea {
+  resize: vertical;
+}
+
+.fullMedicineWidth {
+  grid-column: 1 / -1;
+}
+
+.medicineFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.medicineCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.medicineSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.medicineSaveBtn:hover {
+  background: #587a6b;
+}
+
+@media (max-width: 850px) {
+  .medicineInfoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .medicinePageHeader {
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 650px) {
+  .medicinePageHeader {
+    flex-direction: column;
+  }
+
+  .medicineFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullMedicineWidth {
+    grid-column: auto;
+  }
+
+  .medicineInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .medicineProfileCard,
+  .addMedicineForm {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 700px) {
+  .administrationRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .administrationTableHeader {
+    display: none;
+  }
+}

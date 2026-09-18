@@ -1,0 +1,501 @@
+.mealsDiet {
+  width: 100%;
+}
+
+.mealPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.mealPageHeader h2,
+.mealHeader h2 {
+  color: #294936;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.mealPageHeader p,
+.mealHeader p {
+  color: #718579;
+  font-size: 14px;
+}
+
+.addMealBtn {
+  background: #6b9080;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.addMealBtn:hover {
+  background: #587a6b;
+  transform: translateY(-2px);
+}
+
+.mealSearch {
+  margin-bottom: 20px;
+}
+
+.mealSearch input {
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 16px;
+  border: 1px solid #becfbb;
+  border-radius: 10px;
+  background: white;
+  color: #294936;
+  font-size: 14px;
+}
+
+.mealSearch input:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.12);
+}
+
+.mealTable {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.mealTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1050px;
+}
+
+.mealTable th {
+  background: #f3f7f2;
+  color: #58735a;
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mealTable td {
+  padding: 16px;
+  border-top: 1px solid #e5ebe3;
+  color: #294936;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.mealTable tbody tr:hover {
+  background: #f8faf7;
+}
+
+.tableMealCell {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 150px;
+}
+
+.tableMealIcon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 9px;
+  background: #e6eee4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.tableMealCell div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tableMealCell strong {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.tableMealCell small {
+  color: #718579;
+  font-size: 11px;
+}
+
+.dietBadge {
+  display: inline-block;
+  background: #e2eee4;
+  color: #3f6547;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mealViewBtn {
+  background: #6b9080;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mealViewBtn:hover {
+  background: #587a6b;
+}
+
+.noMeals {
+  text-align: center;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.mealBackBtn {
+  background: transparent;
+  color: #52715c;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.mealBackBtn:hover {
+  color: #294936;
+}
+
+.mealHeader {
+  margin-bottom: 25px;
+}
+
+.dailyMealCard {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.dailyMealHeader {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.dailyMealHeader h3 {
+  color: #294936;
+  font-size: 21px;
+}
+
+.dailyMealHeader p {
+  color: #718579;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.dailyMealList {
+  margin-top: 20px;
+}
+
+.dailyMealRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid #e1e8df;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  background: #fafcf9;
+}
+
+.dailyMealIcon {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 12px;
+  background: #e7efe5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.dailyMealInfo {
+  flex: 1;
+}
+
+.dailyMealInfo h4 {
+  color: #294936;
+  font-size: 17px;
+  margin-bottom: 3px;
+}
+
+.dailyMealInfo span {
+  color: #718579;
+  font-size: 12px;
+}
+
+.dailyMealInfo p {
+  color: #294936;
+  font-size: 13px;
+  margin-top: 7px;
+}
+
+.mealEditBtn {
+  background: #edf3eb;
+  color: #52715c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mealEditBtn:hover {
+  background: #dfeade;
+}
+
+.mealCheckbox,
+.tableMealCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3f6547;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mealCheckbox input,
+.tableMealCheckbox input {
+  width: 19px;
+  height: 19px;
+  accent-color: #6b9080;
+  cursor: pointer;
+}
+
+.addMealInsideBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  border: 1px dashed #9db29f;
+  border-radius: 10px;
+  background: #f5f8f4;
+  color: #52715c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.addMealInsideBtn:hover {
+  background: #eaf1e8;
+}
+
+.mealEditBox {
+  width: 100%;
+}
+
+.mealEditGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.mealEditGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mealEditGrid label {
+  color: #294936;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mealEditGrid input,
+.mealEditGrid select,
+.mealEditGrid textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: white;
+  color: #294936;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.mealEditGrid textarea {
+  resize: vertical;
+}
+
+.fullMealWidth {
+  grid-column: 1 / -1;
+}
+
+.editActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.editCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.editSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.editSaveBtn:hover {
+  background: #587a6b;
+}
+
+.addMealForm {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.mealFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.mealFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.mealFormGroup label {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mealFormGroup label span {
+  color: #c45b5b;
+}
+
+.mealFormGroup input,
+.mealFormGroup select,
+.mealFormGroup textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fbfcfa;
+  color: #294936;
+  font-size: 14px;
+}
+
+.mealFormGroup input:focus,
+.mealFormGroup select:focus,
+.mealFormGroup textarea:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1);
+}
+
+.mealFormGroup textarea {
+  resize: vertical;
+}
+
+.mealFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.mealCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.mealSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mealSaveBtn:hover {
+  background: #587a6b;
+}
+
+@media (max-width: 900px) {
+  .mealPageHeader {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .mealInfoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .dailyMealRow {
+    flex-wrap: wrap;
+  }
+
+  .dailyMealInfo {
+    min-width: calc(100% - 75px);
+  }
+
+  .mealEditGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .mealPageHeader {
+    flex-direction: column;
+  }
+
+  .mealFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mealInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mealProfileCard,
+  .addMealForm,
+  .dailyMealCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mealEditGrid {
+    grid-template-columns: 1fr;
+  }
+}

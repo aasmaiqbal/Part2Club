@@ -1,0 +1,327 @@
+.healthRecords {
+  width: 100%;
+}
+
+.healthPageHeader,
+.healthProfileHeader {
+  margin-bottom: 20px;
+}
+
+.healthPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.healthPageHeader h2,
+.healthProfileHeader h2 {
+  font-size: 32px;
+  margin: 0;
+  color: var(--text);
+}
+
+.healthPageHeader p,
+.healthProfileHeader p {
+  margin-top: 5px;
+  color: #718579;
+}
+
+.addHealthBtn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #324d3e;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.addHealthBtn:hover,
+.healthSaveBtn:hover {
+  background: #496969;
+}
+
+.healthSearch {
+  margin-bottom: 20px;
+}
+
+.healthSearch input {
+  width: 100%;
+  max-width: 400px;
+  padding: 13px 16px;
+  border: 1px solid #d4ddd3;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.healthSearch input:focus {
+  border-color: #6b9080;
+}
+
+.healthTable {
+  background: white;
+  border-radius: 16px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.healthTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.healthTable th,
+.healthTable td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.healthTable th {
+  color: #58735a;
+  font-size: 14px;
+}
+
+.healthTable td {
+  color: #294936;
+  font-size: 14px;
+}
+
+.healthStatus {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.healthStableStatus {
+  background: #dce8d9;
+  color: #3f6547;
+}
+
+.healthAttentionStatus {
+  background: #f4e6c4;
+  color: #856b28;
+}
+
+.healthViewBtn {
+  border: none;
+  background: #d9e4d6;
+  color: #324d3e;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.healthViewBtn:hover {
+  background: #c8d8c5;
+}
+
+.noHealthRecords {
+  text-align: center !important;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.healthBackBtn {
+  border: none;
+  background: #d9e4d6;
+  color: #324d3e;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.healthBackBtn:hover {
+  background: #c8d8c5;
+}
+
+.healthRecordProfile {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(41, 73, 54, 0.06);
+}
+
+.recordTop {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.recordTop span,
+.medicalGrid span,
+.vitalCard span {
+  display: block;
+  color: #718579;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.recordTop strong,
+.medicalGrid strong,
+.vitalCard strong {
+  color: #294936;
+  font-size: 15px;
+}
+
+.recordStable {
+  color: #3f6547 !important;
+}
+
+.recordAttention {
+  color: #856b28 !important;
+}
+
+.healthRecordSection {
+  padding: 24px 0;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.healthRecordSection h3 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #294936;
+}
+
+.vitalsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.vitalCard {
+  background: #f4f7f3;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.medicalGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px 40px;
+}
+
+.fullMedicalInfo {
+  grid-column: 1 / -1;
+}
+
+.addHealthForm {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(41, 73, 54, 0.06);
+}
+
+.healthFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.healthFormGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.healthFormGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #294936;
+  margin-bottom: 8px;
+}
+
+.healthFormGroup label span {
+  color: #c94b4b;
+}
+
+.healthFormGroup input,
+.healthFormGroup select,
+.healthFormGroup textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d4ddd3;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #294936;
+  background: white;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.healthFormGroup textarea {
+  resize: vertical;
+}
+
+.healthFormGroup input:focus,
+.healthFormGroup select:focus,
+.healthFormGroup textarea:focus {
+  border-color: #6b9080;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.healthFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.healthCancelBtn {
+  border: none;
+  background: #eef2ed;
+  color: #324d3e;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.healthSaveBtn {
+  border: none;
+  background: #324d3e;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .recordTop {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vitalsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .healthPageHeader {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .healthFormGrid,
+  .medicalGrid,
+  .recordTop {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth,
+  .fullMedicalInfo {
+    grid-column: auto;
+  }
+}

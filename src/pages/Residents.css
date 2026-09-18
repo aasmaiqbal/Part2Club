@@ -1,8 +1,6 @@
-
 .residents {
   width: 100%;
 }
-
 
 .residentsHeader {
   display: flex;
@@ -22,7 +20,6 @@
   color: #718579;
 }
 
-
 .addResidentBtn {
   border: none;
   padding: 12px 20px;
@@ -34,10 +31,8 @@
 }
 
 .addResidentBtn:hover {
-  background: #263e32;
+  background: #496969;
 }
-
-
 
 .residentSearch {
   margin-bottom: 20px;
@@ -55,9 +50,8 @@
 }
 
 .residentSearch input:focus {
-  border-color: #718f7e;
+  border-color: #6b9080;
 }
-
 
 .residentsTable {
   background: white;
@@ -87,6 +81,46 @@
   color: #294936;
 }
 
+.residentNameCell {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  white-space: nowrap;
+}
+
+.tableResidentPhoto {
+  width: 45px !important;
+  height: 45px !important;
+  min-width: 45px !important;
+  max-width: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+  flex: 0 0 45px !important;
+  border-radius: 50% !important;
+  background: #8ea48b;
+  color: white;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 600;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.tableResidentPhoto img {
+  width: 45px !important;
+  height: 45px !important;
+  min-width: 45px !important;
+  max-width: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
 .status {
   padding: 6px 10px;
@@ -104,7 +138,6 @@
   color: #856b28;
 }
 
-
 .viewBtn {
   border: none;
   background: #d9e4d6;
@@ -115,9 +148,8 @@
 }
 
 .viewBtn:hover {
-  background: #c7d7c3;
+  background: #c8d8c5;
 }
-
 
 .noResidents {
   text-align: center !important;
@@ -125,10 +157,11 @@
   color: #718579 !important;
 }
 
+/* Profile */
+
 .residentProfile {
   width: 100%;
 }
-
 
 .profileHeader {
   margin-bottom: 20px;
@@ -136,10 +169,9 @@
 
 .profileHeader h2 {
   font-size: 32px;
-  margin: 18px 0 0 0;
+  margin: 18px 0 0;
   color: var(--text);
 }
-
 
 .backBtn {
   border: none;
@@ -152,9 +184,8 @@
 }
 
 .backBtn:hover {
-  background: #c7d7c3;
+  background: #c8d8c5;
 }
-
 
 .profileCard {
   background: white;
@@ -163,29 +194,52 @@
   box-shadow: 0 8px 20px rgba(41, 73, 54, 0.06);
 }
 
-
 .profileTop {
   display: flex;
+  align-items: flex-start;
   gap: 30px;
   padding-bottom: 25px;
   border-bottom: 1px solid #e1e8df;
 }
 
 .profilePhoto {
-  min-width: 110px;
-  height: 110px;
-  border-radius: 12px;
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+  flex: 0 0 120px !important;
+  border-radius: 12px !important;
   background: #8ea48b;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 42px;
   font-weight: 600;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.profilePhoto img {
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .basicInfo {
   flex: 1;
+  min-width: 0;
 }
 
 .infoRow {
@@ -209,9 +263,8 @@
   font-size: 15px;
 }
 
-
 .profileSection {
-  padding: 18px 0;
+  padding: 22px 0;
   border-bottom: 1px solid #e1e8df;
 }
 
@@ -219,14 +272,13 @@
   width: 100%;
 }
 
-
 .healthSection {
   padding: 25px 0;
   border-bottom: 1px solid #e1e8df;
 }
 
 .healthSection h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
   font-size: 20px;
   color: #294936;
 }
@@ -264,6 +316,7 @@
   color: #856b28 !important;
 }
 
+/* Add Resident */
 
 .addResidentForm {
   background: white;
@@ -290,8 +343,13 @@
   margin-bottom: 8px;
 }
 
+.formGroup label span {
+  color: #c94b4b;
+}
+
 .formGroup input,
-.formGroup select {
+.formGroup select,
+.formGroup textarea {
   width: 100%;
   padding: 13px 14px;
   border: 1px solid #d4ddd3;
@@ -304,12 +362,21 @@
   box-sizing: border-box;
 }
 
-.formGroup input:focus,
-.formGroup select:focus {
-  border-color: #718f7e;
+.formGroup textarea {
+  resize: vertical;
 }
 
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  border-color: #6b9080;
+}
 
+.readonlyInput {
+  background: #f1f4f1 !important;
+  color: #718579 !important;
+  cursor: not-allowed;
+}
 
 .formActions {
   display: flex;
@@ -330,10 +397,6 @@
   cursor: pointer;
 }
 
-.cancelBtn:hover {
-  background: #dfe7dd;
-}
-
 .saveResidentBtn {
   border: none;
   background: #324d3e;
@@ -345,59 +408,18 @@
 }
 
 .saveResidentBtn:hover {
-  background: #263e32;
+  background: #496969;
 }
 
-
-@media (max-width: 900px) {
-
-  .healthGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-}
-
-
-@media (max-width: 650px) {
-
-  .residentsHeader {
-    align-items: flex-start;
-    gap: 15px;
-    flex-direction: column;
-  }
-
-  .profileTop {
-    flex-direction: column;
-  }
-
-  .infoRow {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .healthGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .formGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .profileCard {
-    padding: 20px;
-  }
-
-  .addResidentForm {
-    padding: 20px;
-  }
-
-  .imageGroup {
+.imageGroup {
   grid-row: span 2;
 }
 
 .imageUpload {
   width: 100%;
-  min-height: 190px;
+  height: 190px !important;
+  min-height: 190px !important;
+  max-height: 190px !important;
   border: 2px dashed #cbd8ca;
   border-radius: 12px;
   background: #f8faf7;
@@ -406,14 +428,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  overflow: hidden;
-  transition: 0.3s ease;
+  overflow: hidden !important;
   box-sizing: border-box;
-}
-
-.imageUpload:hover {
-  border-color: #6b9080;
-  background: #f2f6f1;
 }
 
 .imageUpload input {
@@ -421,9 +437,12 @@
 }
 
 .imageUpload img {
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
+  width: 100% !important;
+  height: 190px !important;
+  max-width: 100% !important;
+  max-height: 190px !important;
+  object-fit: cover !important;
+  display: block !important;
 }
 
 .uploadIcon {
@@ -449,78 +468,6 @@
   font-size: 12px;
 }
 
-.formGroup label span {
-  color: #c94b4b;
-}
-
-.readonlyInput {
-  background: #f1f4f1 !important;
-  color: #718579 !important;
-  cursor: not-allowed;
-}
-
-.formGroup textarea {
-  width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #d4ddd3;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  color: #294936;
-  background: white;
-  outline: none;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-.formGroup input:focus,
-.formGroup select:focus,
-.formGroup textarea:focus {
-  border-color: #6b9080;
-}
-
-.tableResidentPhoto {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #8ea48b;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.tableResidentPhoto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.residentNameCell {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.noResidents {
-  text-align: center !important;
-  padding: 30px !important;
-  color: #718579 !important;
-}
-
-.profilePhoto {
-  overflow: hidden;
-}
-
-.profilePhoto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 @media (max-width: 800px) {
   .formGrid {
     grid-template-columns: 1fr;
@@ -538,6 +485,4 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-}
-
 }
