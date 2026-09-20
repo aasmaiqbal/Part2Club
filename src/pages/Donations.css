@@ -1,0 +1,384 @@
+.donations {
+  width: 100%;
+}
+
+.donationPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.donationPageHeader h2,
+.donationHeader h2 {
+  color: #294936;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.donationPageHeader p,
+.donationHeader p {
+  color: #718579;
+  font-size: 14px;
+}
+
+.addDonationBtn {
+  background: #6b9080;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.addDonationBtn:hover {
+  background: #587a6b;
+  transform: translateY(-2px);
+}
+
+.donationSearch {
+  margin-bottom: 20px;
+}
+
+.donationSearch input {
+  width: 100%;
+  max-width: 440px;
+  padding: 13px 16px;
+  border: 1px solid #becfbb;
+  border-radius: 10px;
+  background: white;
+  color: #294936;
+  font-size: 14px;
+}
+
+.donationSearch input:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.12);
+}
+
+.donationTable {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.donationTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.donationTable th {
+  background: #f3f7f2;
+  color: #58735a;
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.donationTable td {
+  padding: 16px;
+  border-top: 1px solid #e5ebe3;
+  color: #294936;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.donationTable tbody tr:hover {
+  background: #f8faf7;
+}
+
+.donorNameCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.donorSmallIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #e7efe5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.donationAmount {
+  font-weight: 600;
+}
+
+.donationTypeBadge {
+  display: inline-block;
+  background: #e2eee4;
+  color: #3f6547;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tableReceivedCheckbox,
+.receivedCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3f6547;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tableReceivedCheckbox input,
+.receivedCheckbox input {
+  width: 19px;
+  height: 19px;
+  accent-color: #6b9080;
+  cursor: pointer;
+}
+
+.donationViewBtn {
+  background: #6b9080;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.donationViewBtn:hover {
+  background: #587a6b;
+}
+
+.noDonations {
+  text-align: center;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.donationBackBtn {
+  background: transparent;
+  color: #52715c;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.donationBackBtn:hover {
+  color: #294936;
+}
+
+.donationHeader {
+  margin-bottom: 25px;
+}
+
+.donationProfileCard {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.donationTitle {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.donationIcon {
+  width: 65px;
+  height: 65px;
+  border-radius: 15px;
+  background: #e8f0e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.donationTitle h3 {
+  color: #294936;
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+
+.donationTitle span {
+  color: #718579;
+  font-size: 14px;
+}
+
+.donationInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 25px 0;
+}
+
+.donationInfoGrid div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.donationInfoGrid span,
+.donationDetailSection span {
+  color: #718579;
+  font-size: 13px;
+}
+
+.donationInfoGrid strong,
+.donationDetailSection strong {
+  color: #294936;
+  font-size: 14px;
+}
+
+.donationDetailSection {
+  padding: 18px;
+  background: #f5f8f4;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.donationReceivedBox {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #edf4eb;
+  border: 1px solid #d7e5d5;
+}
+
+.receivedCheckbox {
+  font-size: 14px;
+}
+
+.addDonationForm {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.donationFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.donationFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.donationFormGroup label {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.donationFormGroup label span {
+  color: #c45b5b;
+}
+
+.donationFormGroup input,
+.donationFormGroup select,
+.donationFormGroup textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fbfcfa;
+  color: #294936;
+  font-size: 14px;
+}
+
+.donationFormGroup input:focus,
+.donationFormGroup select:focus,
+.donationFormGroup textarea:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1);
+}
+
+.donationFormGroup textarea {
+  resize: vertical;
+}
+
+.fullDonationWidth {
+  grid-column: 1 / -1;
+}
+
+.donationFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.donationCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.donationSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.donationSaveBtn:hover {
+  background: #587a6b;
+}
+
+@media (max-width: 850px) {
+  .donationInfoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .donationPageHeader {
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 650px) {
+  .donationPageHeader {
+    flex-direction: column;
+  }
+
+  .donationFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullDonationWidth {
+    grid-column: auto;
+  }
+
+  .donationInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .donationProfileCard,
+  .addDonationForm {
+    padding: 20px;
+  }
+}

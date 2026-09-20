@@ -1,0 +1,514 @@
+.visitors {
+  width: 100%;
+}
+
+.visitorPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.visitorPageHeader h2,
+.visitorHeader h2 {
+  color: #294936;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.visitorPageHeader p,
+.visitorHeader p {
+  color: #718579;
+  font-size: 14px;
+}
+
+.addVisitorBtn {
+  background: #6b9080;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.addVisitorBtn:hover {
+  background: #587a6b;
+  transform: translateY(-2px);
+}
+
+.visitorSearch {
+  margin-bottom: 20px;
+}
+
+.visitorSearch input {
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 16px;
+  border: 1px solid #becfbb;
+  border-radius: 10px;
+  background: white;
+  color: #294936;
+  font-size: 14px;
+}
+
+.visitorSearch input:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.12);
+}
+
+.visitorTable {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.visitorTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.visitorTable th {
+  background: #f3f7f2;
+  color: #58735a;
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.visitorTable td {
+  padding: 16px;
+  border-top: 1px solid #e5ebe3;
+  color: #294936;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.visitorTable tbody tr:hover {
+  background: #f8faf7;
+}
+
+.visitorSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.visitorSummary span {
+  color: #294936;
+  font-size: 13px;
+}
+
+.visitorSummary small {
+  color: #718579;
+  font-size: 11px;
+}
+
+.visitorCount,
+.checkedOutCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #e2eee4;
+  color: #3f6547;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.noVisitorText {
+  color: #9aa99d;
+  font-size: 13px;
+}
+
+.visitorViewBtn {
+  background: #6b9080;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.visitorViewBtn:hover {
+  background: #587a6b;
+}
+
+.noVisitors {
+  text-align: center;
+  padding: 30px !important;
+  color: #718579 !important;
+}
+
+.visitorBackBtn {
+  background: transparent;
+  color: #52715c;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.visitorBackBtn:hover {
+  color: #294936;
+}
+
+.visitorHeader {
+  margin-bottom: 25px;
+}
+
+.residentVisitorCard {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.residentVisitorHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e1e8df;
+}
+
+.residentVisitorAvatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #6b9080;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.residentVisitorHeader h3 {
+  color: #294936;
+  font-size: 21px;
+}
+
+.residentVisitorHeader p {
+  color: #718579;
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.residentVisitorList {
+  margin-top: 20px;
+}
+
+.residentVisitorItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: #fafcf9;
+  border: 1px solid #e1e8df;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.residentVisitorIcon {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 12px;
+  background: #e7efe5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.residentVisitorInfo {
+  flex: 1;
+}
+
+.residentVisitorInfo h4 {
+  color: #294936;
+  font-size: 17px;
+  margin-bottom: 3px;
+}
+
+.residentVisitorInfo span {
+  display: inline-block;
+  color: #52715c;
+  background: #e2eee4;
+  padding: 4px 9px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.residentVisitorInfo p {
+  color: #718579;
+  font-size: 12px;
+  margin-top: 7px;
+}
+
+.residentVisitorInfo small {
+  display: block;
+  color: #52665a;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.visitorEditBtn {
+  background: #edf3eb;
+  color: #52715c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.visitorEditBtn:hover {
+  background: #dfeade;
+}
+
+.visitorCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3f6547;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.visitorCheckbox input {
+  width: 19px;
+  height: 19px;
+  accent-color: #6b9080;
+  cursor: pointer;
+}
+
+.addVisitorInsideBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  border: 1px dashed #9db29f;
+  border-radius: 10px;
+  background: #f5f8f4;
+  color: #52715c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.addVisitorInsideBtn:hover {
+  background: #eaf1e8;
+}
+
+.visitorEditBox {
+  width: 100%;
+}
+
+.visitorEditGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.visitorEditGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.visitorEditGrid label {
+  color: #294936;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.visitorEditGrid input,
+.visitorEditGrid textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: white;
+  color: #294936;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.visitorEditGrid textarea {
+  resize: vertical;
+}
+
+.fullVisitorWidth {
+  grid-column: 1 / -1;
+}
+
+.visitorEditActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.visitorEditCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.visitorEditSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.visitorEditSaveBtn:hover {
+  background: #587a6b;
+}
+
+.noResidentVisitors {
+  padding: 25px;
+  text-align: center;
+  color: #718579;
+  background: #f8faf7;
+  border-radius: 12px;
+}
+
+.addVisitorForm {
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.visitorFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.visitorFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.visitorFormGroup label {
+  color: #294936;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.visitorFormGroup label span {
+  color: #c45b5b;
+}
+
+.visitorFormGroup input,
+.visitorFormGroup select,
+.visitorFormGroup textarea {
+  width: 100%;
+  border: 1px solid #cbd8ca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fbfcfa;
+  color: #294936;
+  font-size: 14px;
+}
+
+.visitorFormGroup input:focus,
+.visitorFormGroup select:focus,
+.visitorFormGroup textarea:focus {
+  border-color: #6b9080;
+  box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1);
+}
+
+.visitorFormGroup textarea {
+  resize: vertical;
+}
+
+.visitorFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8df;
+}
+
+.visitorCancelBtn {
+  background: #edf1ec;
+  color: #52665a;
+  padding: 11px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.visitorSaveBtn {
+  background: #6b9080;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.visitorSaveBtn:hover {
+  background: #587a6b;
+}
+
+@media (max-width: 850px) {
+  .visitorPageHeader {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .residentVisitorItem {
+    flex-wrap: wrap;
+  }
+
+  .visitorEditGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .visitorPageHeader {
+    flex-direction: column;
+  }
+
+  .visitorFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullVisitorWidth {
+    grid-column: auto;
+  }
+
+  .residentVisitorCard,
+  .addVisitorForm {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .visitorEditGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .residentVisitorItem {
+    align-items: flex-start;
+  }
+}

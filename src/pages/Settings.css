@@ -1,0 +1,270 @@
+.settings {
+  width: 100%;
+}
+
+.settingsHeader {
+  margin-bottom: 25px;
+}
+
+.settingsHeader h2 {
+  font-size: 32px;
+  color: var(--text);
+}
+
+.settingsHeader p {
+  margin-top: 5px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.settingsCard {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 25px;
+  box-shadow: var(--shadow);
+}
+
+.appearanceCard {
+  grid-column: 1 / -1;
+}
+
+.settingsCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.settingsIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--sidebar-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.settingsCardHeader h3 {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.settingsCardHeader p {
+  color: var(--text-light);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.profilePhotoSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settingsAvatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--sidebar-active);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.profilePhotoSection h4 {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.profilePhotoSection p {
+  color: var(--text-light);
+  font-size: 13px;
+  margin: 3px 0 8px;
+}
+
+.photoButton {
+  background: var(--background);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.settingsFormGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.settingsFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.settingsFormGroup label {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.settingsFormGroup input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.settingsFormGroup input::placeholder {
+  color: var(--text-light);
+}
+
+.settingsFormGroup input:focus {
+  border-color: var(--sidebar-active);
+}
+
+.settingsFormGroup input:disabled {
+  background: var(--disabled-bg);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
+.settingsActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.settingsSaveButton {
+  background: var(--sidebar-hover);
+  color: white;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.settingsSaveButton:hover {
+  background: var(--sidebar-active);
+}
+
+.appearanceOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.appearanceOption:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.appearanceOption h4 {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.appearanceOption p {
+  color: var(--text-light);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.appearanceOption select {
+  width: 150px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.settingsToggle {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.settingsToggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settingsToggle span {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.settingsToggle span::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.settingsToggle input:checked + span {
+  background: var(--sidebar-active);
+}
+
+.settingsToggle input:checked + span::before {
+  transform: translateX(22px);
+}
+
+@media (max-width: 900px) {
+  .settingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .appearanceCard {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .settingsCard {
+    padding: 20px;
+  }
+
+  .settingsFormGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .appearanceOption {
+    align-items: flex-start;
+  }
+}

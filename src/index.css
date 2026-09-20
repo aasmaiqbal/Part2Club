@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-
 :root{
   --background:#D9E4D7;
   --surface:#FFFFFF;
@@ -10,9 +9,25 @@
   --text:#2B4336;
   --text-light:#5E6F63;
   --border:#BECFBB;
+  --input-bg:#FAFCF9;
+  --disabled-bg:#EEF3ED;
   --shadow:0 8px 20px rgba(0,0,0,.08);
   --radius:18px;
   --transition:.3s ease;
+}
+
+body.dark-theme{
+  --background:#18231D;
+  --surface:#243229;
+  --sidebar:#111C16;
+  --sidebar-hover:#49695A;
+  --sidebar-active:#6F9380;
+  --text:#E8F0EA;
+  --text-light:#AABCAF;
+  --border:#405246;
+  --input-bg:#1C2821;
+  --disabled-bg:#303D35;
+  --shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
 *{
@@ -31,6 +46,7 @@ body{
   color:var(--text);
   overflow-x:hidden;
   min-height:100vh;
+  transition:background .3s ease,color .3s ease;
 }
 
 #root{
@@ -72,14 +88,14 @@ ol{
 }
 
 ::-webkit-scrollbar-track{
-  background:#F2F4F1;
+  background:var(--background);
 }
 
 ::-webkit-scrollbar-thumb{
-  background:#B9C6BD;
+  background:var(--border);
   border-radius:20px;
 }
 
 ::-webkit-scrollbar-thumb:hover{
-  background:#93A69A;
+  background:var(--sidebar-active);
 }
