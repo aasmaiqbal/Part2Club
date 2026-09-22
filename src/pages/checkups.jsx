@@ -1,67 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Checkups.css";
 
-const residents = [
-  { resident_id: 1, name: "Mrs. Ayesha Khan" },
-  { resident_id: 2, name: "Mr. Ahmed Ali" },
-  { resident_id: 3, name: "Mrs. Sara Begum" },
-  { resident_id: 4, name: "Mr. Raj Sharma" },
-];
-
-const initialCheckups = [
-  {
-    checkup_id: 1,
-    resident_id: 1,
-    checkup_date: "2026-09-18",
-    checkup_time: "10:30",
-    doctor: "Dr. Rahul Mehta",
-    checkup_type: "General Health Check",
-    reason: "Routine health monitoring",
-    findings: "Blood pressure stable. Overall condition satisfactory.",
-    recommendations: "Continue current medicines and low salt diet.",
-    status: "Scheduled",
-    completed: false,
-  },
-  {
-    checkup_id: 2,
-    resident_id: 2,
-    checkup_date: "2026-09-18",
-    checkup_time: "12:00",
-    doctor: "Dr. Rahul Mehta",
-    checkup_type: "Diabetes Checkup",
-    reason: "Blood sugar monitoring",
-    findings: "Blood sugar slightly elevated.",
-    recommendations: "Continue medication and monitor blood sugar regularly.",
-    status: "Scheduled",
-    completed: false,
-  },
-  {
-    checkup_id: 3,
-    resident_id: 3,
-    checkup_date: "2026-09-17",
-    checkup_time: "11:00",
-    doctor: "Dr. Rahul Mehta",
-    checkup_type: "Routine Checkup",
-    reason: "Regular health assessment",
-    findings: "Health condition stable.",
-    recommendations: "Continue balanced diet and daily walking.",
-    status: "Completed",
-    completed: true,
-  },
-  {
-    checkup_id: 4,
-    resident_id: 4,
-    checkup_date: "2026-09-19",
-    checkup_time: "15:00",
-    doctor: "Dr. Rahul Mehta",
-    checkup_type: "Cholesterol Review",
-    reason: "Follow-up cholesterol assessment",
-    findings: "Follow-up assessment required.",
-    recommendations: "Continue low fat diet and prescribed medication.",
-    status: "Scheduled",
-    completed: false,
-  },
-];
+const API = "http://127.0.0.1:5000";
 
 const emptyCheckup = {
   resident_id: "",
@@ -75,14 +15,6 @@ const emptyCheckup = {
   completed: false,
 };
 
-function getResidentName(id) {
-  const resident = residents.find(
-    (item) => item.resident_id === Number(id)
-  );
-
-  return resident ? resident.name : "Unknown Resident";
-}
-
 function formatDate(date) {
   if (!date) return "—";
 
@@ -94,34 +26,113 @@ function formatDate(date) {
 }
 
 function Checkups() {
-  const [checkups, setCheckups] = useState(initialCheckups);
+  const [residents, setResidents] = useState([]);
+  const [checkups, setCheckups] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCheckup, setSelectedCheckup] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+
   const [newCheckup, setNewCheckup] = useState(emptyCheckup);
 
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // LOAD RESIDENTS
+  const loadResidents = async () => {
+    try {
+      const response = await fetch(`${API}/api/residents`);
+
+      if (!response.ok) {
+        throw new Error("Failed to load residents");
+      }
+
+      const data = await response.json();
+      setResidents(data);
+    } catch (error) {
+      console.error("Error loading residents:", error);
+      alert("Unable to load residents.");
+    }
+  };
+
+  // LOAD CHECKUPS
+  const loadCheckups = async () => {
+    try {
+      const response = await fetch(`${API}/api/checkups`);
+
+      if (!response.ok) {
+        throw new Error("Failed to load checkups");
+      }
+
+      const data = await response.json();
+      setCheckups(data);
+    } catch (error) {
+      console.error("Error loading checkups:", error);
+      alert("Unable to load checkups.");
+    }
+  };
+
+  // LOAD EVERYTHING
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      await Promise.all([
+        loadResidents(),
+        loadCheckups(),
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // GET RESIDENT NAME
+  const getResidentName = (id) => {
+    const resident = residents.find(
+      (item) => item.resident_id === Number(id)
+    );
+
+    return resident ? resident.name : "Unknown Resident";
+  };
+
+  // OPEN ADD FORM
+  const openAddForm = async () => {
+    // Get the latest residents from database
+    await loadResidents();
+
+    setNewCheckup(emptyCheckup);
+    setShowAddForm(true);
+  };
+
+  // SEARCH
   const filteredCheckups = checkups.filter((checkup) => {
     const residentName = getResidentName(checkup.resident_id);
     const search = searchTerm.toLowerCase().trim();
 
     return (
       residentName.toLowerCase().includes(search) ||
-      checkup.doctor.toLowerCase().includes(search) ||
-      checkup.checkup_type.toLowerCase().includes(search) ||
-      checkup.reason.toLowerCase().includes(search)
+      (checkup.doctor || "").toLowerCase().includes(search) ||
+      (checkup.checkup_type || "").toLowerCase().includes(search) ||
+      (checkup.reason || "").toLowerCase().includes(search)
     );
   });
 
+  // INPUT CHANGE
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewCheckup({
-      ...newCheckup,
+    setNewCheckup((current) => ({
+      ...current,
       [name]: value,
-    });
+    }));
   };
 
-  const handleAddCheckup = (e) => {
+  // ADD CHECKUP
+  const handleAddCheckup = async (e) => {
     e.preventDefault();
 
     if (
@@ -136,41 +147,130 @@ function Checkups() {
       return;
     }
 
-    const checkup = {
-      checkup_id: Date.now(),
-      ...newCheckup,
-      resident_id: Number(newCheckup.resident_id),
-      status: "Scheduled",
-      completed: false,
-    };
+    try {
+      setSaving(true);
 
-    setCheckups([...checkups, checkup]);
-    setNewCheckup(emptyCheckup);
-    setShowAddForm(false);
+      const checkupData = {
+        resident_id: Number(newCheckup.resident_id),
+        checkup_date: newCheckup.checkup_date,
+        checkup_time: newCheckup.checkup_time,
+        doctor: newCheckup.doctor,
+        checkup_type: newCheckup.checkup_type,
+        reason: newCheckup.reason,
+        findings: newCheckup.findings,
+        recommendations: newCheckup.recommendations,
+        status: "Scheduled",
+        completed: 0,
+      };
+
+      const response = await fetch(`${API}/api/checkups`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(checkupData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to add checkup");
+      }
+
+      alert("Checkup added successfully!");
+
+      setNewCheckup(emptyCheckup);
+      setShowAddForm(false);
+
+      await loadCheckups();
+    } catch (error) {
+      console.error("Error adding checkup:", error);
+      alert(`Unable to add checkup: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
+  // CANCEL
   const handleCancel = () => {
     setNewCheckup(emptyCheckup);
     setShowAddForm(false);
   };
 
-  const toggleCompleted = (checkupId) => {
-    setCheckups((current) =>
-      current.map((checkup) =>
-        checkup.checkup_id === checkupId
-          ? {
-              ...checkup,
-              completed: !checkup.completed,
-              status: !checkup.completed
-                ? "Completed"
-                : "Scheduled",
-            }
-          : checkup
-      )
-    );
+  // TOGGLE COMPLETED
+  const toggleCompleted = async (checkup) => {
+    try {
+      const newCompleted = checkup.completed ? 0 : 1;
+
+      const updatedCheckup = {
+        resident_id: Number(checkup.resident_id),
+        checkup_date: checkup.checkup_date,
+        checkup_time: checkup.checkup_time,
+        doctor: checkup.doctor,
+        checkup_type: checkup.checkup_type,
+        reason: checkup.reason,
+        findings: checkup.findings,
+        recommendations: checkup.recommendations,
+        status: newCompleted ? "Completed" : "Scheduled",
+        completed: newCompleted,
+      };
+
+      const response = await fetch(
+        `${API}/api/checkups/${checkup.checkup_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedCheckup),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to update checkup");
+      }
+
+      await loadCheckups();
+
+      if (
+        selectedCheckup &&
+        selectedCheckup.checkup_id === checkup.checkup_id
+      ) {
+        setSelectedCheckup({
+          ...checkup,
+          ...updatedCheckup,
+          completed: Boolean(newCompleted),
+        });
+      }
+    } catch (error) {
+      console.error("Error updating checkup:", error);
+      alert(`Unable to update checkup: ${error.message}`);
+    }
   };
 
+  // LOADING
+  if (loading) {
+    return (
+      <div className="checkups">
+        <div className="checkupPageHeader">
+          <div>
+            <h2>Checkups</h2>
+            <p>Loading checkups...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // DETAILS PAGE
   if (selectedCheckup) {
+    const currentCheckup =
+      checkups.find(
+        (item) => item.checkup_id === selectedCheckup.checkup_id
+      ) || selectedCheckup;
+
     return (
       <div className="checkups">
         <div className="checkupHeader">
@@ -184,7 +284,7 @@ function Checkups() {
           <h2>Checkup Details</h2>
 
           <p>
-            {getResidentName(selectedCheckup.resident_id)}
+            {getResidentName(currentCheckup.resident_id)}
           </p>
         </div>
 
@@ -193,10 +293,10 @@ function Checkups() {
             <div className="checkupIcon">🩺</div>
 
             <div>
-              <h3>{selectedCheckup.checkup_type}</h3>
+              <h3>{currentCheckup.checkup_type}</h3>
 
               <span>
-                {getResidentName(selectedCheckup.resident_id)}
+                {getResidentName(currentCheckup.resident_id)}
               </span>
             </div>
           </div>
@@ -205,42 +305,42 @@ function Checkups() {
             <div>
               <span>Resident</span>
               <strong>
-                {getResidentName(selectedCheckup.resident_id)}
+                {getResidentName(currentCheckup.resident_id)}
               </strong>
             </div>
 
             <div>
               <span>Checkup Date</span>
               <strong>
-                {formatDate(selectedCheckup.checkup_date)}
+                {formatDate(currentCheckup.checkup_date)}
               </strong>
             </div>
 
             <div>
               <span>Time</span>
-              <strong>{selectedCheckup.checkup_time}</strong>
+              <strong>{currentCheckup.checkup_time}</strong>
             </div>
 
             <div>
               <span>Doctor</span>
-              <strong>{selectedCheckup.doctor}</strong>
+              <strong>{currentCheckup.doctor}</strong>
             </div>
 
             <div>
               <span>Checkup Type</span>
-              <strong>{selectedCheckup.checkup_type}</strong>
+              <strong>{currentCheckup.checkup_type}</strong>
             </div>
 
             <div>
               <span>Status</span>
               <strong
                 className={
-                  selectedCheckup.completed
+                  currentCheckup.completed
                     ? "checkupCompletedText"
                     : "checkupPendingText"
                 }
               >
-                {selectedCheckup.completed
+                {currentCheckup.completed
                   ? "Completed"
                   : "Not Completed"}
               </strong>
@@ -249,20 +349,20 @@ function Checkups() {
 
           <div className="checkupDetailSection">
             <span>Reason / Symptoms</span>
-            <strong>{selectedCheckup.reason}</strong>
+            <strong>{currentCheckup.reason}</strong>
           </div>
 
           <div className="checkupDetailSection">
             <span>Findings / Diagnosis</span>
             <strong>
-              {selectedCheckup.findings || "Not recorded"}
+              {currentCheckup.findings || "Not recorded"}
             </strong>
           </div>
 
           <div className="checkupDetailSection">
             <span>Recommendations / Treatment</span>
             <strong>
-              {selectedCheckup.recommendations || "Not recorded"}
+              {currentCheckup.recommendations || "Not recorded"}
             </strong>
           </div>
 
@@ -270,14 +370,14 @@ function Checkups() {
             <label className="completionCheckbox">
               <input
                 type="checkbox"
-                checked={selectedCheckup.completed}
+                checked={Boolean(currentCheckup.completed)}
                 onChange={() =>
-                  toggleCompleted(selectedCheckup.checkup_id)
+                  toggleCompleted(currentCheckup)
                 }
               />
 
               <span>
-                {selectedCheckup.completed
+                {currentCheckup.completed
                   ? "Checkup Completed"
                   : "Mark Checkup as Completed"}
               </span>
@@ -288,6 +388,7 @@ function Checkups() {
     );
   }
 
+  // ADD FORM
   if (showAddForm) {
     return (
       <div className="checkups">
@@ -306,6 +407,7 @@ function Checkups() {
           onSubmit={handleAddCheckup}
         >
           <div className="checkupFormGrid">
+
             <div className="checkupFormGroup">
               <label>
                 Resident <span>*</span>
@@ -366,6 +468,7 @@ function Checkups() {
                 onChange={handleInputChange}
               >
                 <option value="">Select doctor</option>
+
                 <option value="Dr. Rahul Mehta">
                   Dr. Rahul Mehta
                 </option>
@@ -383,24 +486,31 @@ function Checkups() {
                 onChange={handleInputChange}
               >
                 <option value="">Select checkup type</option>
+
                 <option value="General Health Check">
                   General Health Check
                 </option>
+
                 <option value="Routine Checkup">
                   Routine Checkup
                 </option>
+
                 <option value="Diabetes Checkup">
                   Diabetes Checkup
                 </option>
+
                 <option value="Blood Pressure Check">
                   Blood Pressure Check
                 </option>
+
                 <option value="Cholesterol Review">
                   Cholesterol Review
                 </option>
+
                 <option value="Follow-up Checkup">
                   Follow-up Checkup
                 </option>
+
                 <option value="Other">Other</option>
               </select>
             </div>
@@ -449,12 +559,17 @@ function Checkups() {
               type="button"
               className="checkupCancelBtn"
               onClick={handleCancel}
+              disabled={saving}
             >
               Cancel
             </button>
 
-            <button type="submit" className="checkupSaveBtn">
-              Add Checkup
+            <button
+              type="submit"
+              className="checkupSaveBtn"
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Add Checkup"}
             </button>
           </div>
         </form>
@@ -462,6 +577,7 @@ function Checkups() {
     );
   }
 
+  // MAIN PAGE
   return (
     <div className="checkups">
       <div className="checkupPageHeader">
@@ -475,7 +591,7 @@ function Checkups() {
 
         <button
           className="addCheckupBtn"
-          onClick={() => setShowAddForm(true)}
+          onClick={openAddForm}
         >
           + Add Checkup
         </button>
@@ -536,9 +652,9 @@ function Checkups() {
                     <label className="tableCompletionCheckbox">
                       <input
                         type="checkbox"
-                        checked={checkup.completed}
+                        checked={Boolean(checkup.completed)}
                         onChange={() =>
-                          toggleCompleted(checkup.checkup_id)
+                          toggleCompleted(checkup)
                         }
                       />
 

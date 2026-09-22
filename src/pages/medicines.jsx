@@ -1,102 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Medicines.css";
 
-const residents = [
-  { resident_id: 1, name: "Mrs. Ayesha Khan" },
-  { resident_id: 2, name: "Mr. Ahmed Ali" },
-  { resident_id: 3, name: "Mrs. Sara Begum" },
-  { resident_id: 4, name: "Mr. Raj Sharma" },
-];
-
-const initialMedicines = [
-  {
-    medicine_id: 1,
-    resident_id: 1,
-    medicine_name: "Amlodipine",
-    dosage: "5mg",
-    frequency: "Once Daily",
-    time_of_day: "Morning",
-    start_date: "2026-09-01",
-    end_date: "2026-12-01",
-    prescribed_by: "Dr. Rahul Mehta",
-    instructions: "Take after breakfast",
-    status: "Active",
-  },
-  {
-    medicine_id: 2,
-    resident_id: 2,
-    medicine_name: "Metformin",
-    dosage: "500mg",
-    frequency: "Twice Daily",
-    time_of_day: "Morning, Evening",
-    start_date: "2026-09-01",
-    end_date: "2026-12-01",
-    prescribed_by: "Dr. Rahul Mehta",
-    instructions: "Take after meals",
-    status: "Active",
-  },
-  {
-    medicine_id: 3,
-    resident_id: 3,
-    medicine_name: "Paracetamol",
-    dosage: "500mg",
-    frequency: "As Needed",
-    time_of_day: "When Required",
-    start_date: "2026-09-05",
-    end_date: "2026-10-05",
-    prescribed_by: "Dr. Rahul Mehta",
-    instructions: "Take only when required for pain",
-    status: "Active",
-  },
-  {
-    medicine_id: 4,
-    resident_id: 4,
-    medicine_name: "Atorvastatin",
-    dosage: "10mg",
-    frequency: "Once Daily",
-    time_of_day: "Night",
-    start_date: "2026-09-01",
-    end_date: "2026-12-01",
-    prescribed_by: "Dr. Rahul Mehta",
-    instructions: "Take after dinner",
-    status: "Active",
-  },
-];
-
-const initialAdministration = [
-  {
-    administration_id: 1,
-    medicine_id: 1,
-    administered_date: "2026-09-18",
-    administered_time: "08:00",
-    status: "Given",
-    administered_by: "Nurse Maria",
-  },
-  {
-    administration_id: 2,
-    medicine_id: 1,
-    administered_date: "2026-09-17",
-    administered_time: "08:00",
-    status: "Given",
-    administered_by: "Nurse Maria",
-  },
-  {
-    administration_id: 3,
-    medicine_id: 2,
-    administered_date: "2026-09-18",
-    administered_time: "08:00",
-    status: "Given",
-    administered_by: "Nurse Sarah",
-  },
-  {
-    administration_id: 4,
-    medicine_id: 2,
-    administered_date: "2026-09-18",
-    administered_time: "20:00",
-    status: "Not Given",
-    administered_by: "",
-  },
-];
+const API = "http://127.0.0.1:5000";
 
 const emptyMedicine = {
   resident_id: "",
@@ -111,18 +16,10 @@ const emptyMedicine = {
   status: "Active",
 };
 
-function getResidentName(id) {
-  const resident = residents.find(
-    (item) => item.resident_id === Number(id)
-  );
-
-  return resident ? resident.name : "Unknown Resident";
-}
-
 function formatDate(date) {
   if (!date) return "—";
 
-  return new Date(date).toLocaleDateString("en-IN", {
+  return new Date(`${date}T00:00:00`).toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -140,35 +37,98 @@ function formatAdministrationDate(date) {
 }
 
 function Medicines() {
-  const [medicines, setMedicines] = useState(initialMedicines);
-  const [administration, setAdministration] = useState(
-    initialAdministration
-  );
+  const [residents, setResidents] = useState([]);
+  const [medicines, setMedicines] = useState([]);
+  const [administration, setAdministration] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMedicine, setSelectedMedicine] = useState(null);
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMedicine, setNewMedicine] = useState(emptyMedicine);
 
-  const filteredMedicines = medicines.filter((medicine) => {
-    const residentName = getResidentName(medicine.resident_id);
-    const search = searchTerm.toLowerCase().trim();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-    return (
-      residentName.toLowerCase().includes(search) ||
-      medicine.medicine_name.toLowerCase().includes(search)
+  // --------------------------------------------------
+  // LOAD DATA FROM FLASK
+  // --------------------------------------------------
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      const [
+        residentsResponse,
+        medicinesResponse,
+        administrationResponse,
+      ] = await Promise.all([
+        fetch(`${API}/api/residents`),
+        fetch(`${API}/api/medicines`),
+        fetch(`${API}/api/medicine-administration`),
+      ]);
+
+      if (!residentsResponse.ok) {
+        throw new Error("Could not load residents.");
+      }
+
+      if (!medicinesResponse.ok) {
+        throw new Error("Could not load medicines.");
+      }
+
+      if (!administrationResponse.ok) {
+        throw new Error("Could not load administration records.");
+      }
+
+      const residentsData = await residentsResponse.json();
+      const medicinesData = await medicinesResponse.json();
+      const administrationData = await administrationResponse.json();
+
+      setResidents(residentsData);
+      setMedicines(medicinesData);
+      setAdministration(administrationData);
+    } catch (error) {
+      console.error("Error loading medicine data:", error);
+      alert("Could not load medicine data from the backend.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // --------------------------------------------------
+  // RESIDENT NAME
+  // --------------------------------------------------
+
+  const getResidentName = (id) => {
+    const resident = residents.find(
+      (item) => Number(item.resident_id) === Number(id)
     );
-  });
+
+    return resident ? resident.name : "Unknown Resident";
+  };
+
+  // --------------------------------------------------
+  // FORM INPUT
+  // --------------------------------------------------
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewMedicine({
-      ...newMedicine,
+    setNewMedicine((current) => ({
+      ...current,
       [name]: value,
-    });
+    }));
   };
 
-  const handleAddMedicine = (e) => {
+  // --------------------------------------------------
+  // ADD MEDICINE TO DATABASE
+  // --------------------------------------------------
+
+  const handleAddMedicine = async (e) => {
     e.preventDefault();
 
     if (
@@ -182,42 +142,133 @@ function Medicines() {
       return;
     }
 
-    const medicine = {
-      medicine_id: Date.now(),
-      ...newMedicine,
-      resident_id: Number(newMedicine.resident_id),
-    };
+    try {
+      setSaving(true);
 
-    setMedicines([...medicines, medicine]);
-    setNewMedicine(emptyMedicine);
-    setShowAddForm(false);
+      const medicineData = {
+        resident_id: Number(newMedicine.resident_id),
+        medicine_name: newMedicine.medicine_name,
+        dosage: newMedicine.dosage,
+        frequency: newMedicine.frequency,
+        time_of_day: newMedicine.time_of_day,
+        start_date: newMedicine.start_date,
+        end_date: newMedicine.end_date,
+        prescribed_by: newMedicine.prescribed_by,
+        instructions: newMedicine.instructions,
+        status: newMedicine.status,
+      };
+
+      const response = await fetch(`${API}/api/medicines`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(medicineData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to add medicine.");
+      }
+
+      alert("Medicine added successfully!");
+
+      setNewMedicine(emptyMedicine);
+      setShowAddForm(false);
+
+      await loadData();
+    } catch (error) {
+      console.error("Error adding medicine:", error);
+      alert(`Could not add medicine: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
   };
+
+  // --------------------------------------------------
+  // CANCEL FORM
+  // --------------------------------------------------
 
   const handleCancel = () => {
     setNewMedicine(emptyMedicine);
     setShowAddForm(false);
   };
 
-  const toggleMedication = (record) => {
-    setAdministration((current) =>
-      current.map((item) =>
-        item.administration_id === record.administration_id
-          ? {
-              ...item,
-              status: item.status === "Given" ? "Not Given" : "Given",
-              administered_by:
-                item.status === "Given" ? "" : "Nurse Maria",
-            }
-          : item
-      )
-    );
+  // --------------------------------------------------
+  // TOGGLE MEDICINE ADMINISTRATION
+  // --------------------------------------------------
+
+  const toggleMedication = async (record) => {
+    const newStatus =
+      record.status === "Given" ? "Not Given" : "Given";
+
+    const newAdministeredBy =
+      newStatus === "Given" ? "Nurse Maria" : "";
+
+    try {
+      const response = await fetch(
+        `${API}/api/medicine-administration/${record.administration_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            medicine_id: record.medicine_id,
+            administered_date: record.administered_date,
+            administered_time: record.administered_time,
+            status: newStatus,
+            administered_by: newAdministeredBy,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Could not update administration record."
+        );
+      }
+
+      await loadData();
+    } catch (error) {
+      console.error("Error updating administration:", error);
+      alert(`Could not update medicine status: ${error.message}`);
+    }
   };
+
+  // --------------------------------------------------
+  // GET ADMINISTRATION RECORDS FOR MEDICINE
+  // --------------------------------------------------
 
   const getMedicineAdministration = (medicineId) => {
     return administration.filter(
-      (item) => item.medicine_id === medicineId
+      (item) => Number(item.medicine_id) === Number(medicineId)
     );
   };
+
+  // --------------------------------------------------
+  // SEARCH
+  // --------------------------------------------------
+
+  const filteredMedicines = medicines.filter((medicine) => {
+    const residentName = getResidentName(medicine.resident_id);
+
+    const search = searchTerm.toLowerCase().trim();
+
+    return (
+      residentName.toLowerCase().includes(search) ||
+      (medicine.medicine_name || "")
+        .toLowerCase()
+        .includes(search)
+    );
+  });
+
+  // --------------------------------------------------
+  // MEDICINE DETAILS PAGE
+  // --------------------------------------------------
 
   if (selectedMedicine) {
     const medicineAdministration = getMedicineAdministration(
@@ -226,6 +277,7 @@ function Medicines() {
 
     return (
       <div className="medicines">
+
         <div className="medicineHeader">
           <button
             className="medicineBackBtn"
@@ -235,22 +287,35 @@ function Medicines() {
           </button>
 
           <h2>Medicine Details</h2>
-          <p>{getResidentName(selectedMedicine.resident_id)}</p>
+
+          <p>
+            {getResidentName(selectedMedicine.resident_id)}
+          </p>
         </div>
 
         <div className="medicineProfileCard">
+
           <div className="medicineTitle">
-            <div className="medicineIcon">💊</div>
+
+            <div className="medicineIcon">
+              💊
+            </div>
 
             <div>
               <h3>{selectedMedicine.medicine_name}</h3>
-              <span>{selectedMedicine.dosage}</span>
+
+              <span>
+                {selectedMedicine.dosage}
+              </span>
             </div>
+
           </div>
 
           <div className="medicineInfoGrid">
+
             <div>
               <span>Resident</span>
+
               <strong>
                 {getResidentName(selectedMedicine.resident_id)}
               </strong>
@@ -258,52 +323,82 @@ function Medicines() {
 
             <div>
               <span>Frequency</span>
-              <strong>{selectedMedicine.frequency}</strong>
+
+              <strong>
+                {selectedMedicine.frequency || "—"}
+              </strong>
             </div>
 
             <div>
               <span>Time of Day</span>
-              <strong>{selectedMedicine.time_of_day || "—"}</strong>
+
+              <strong>
+                {selectedMedicine.time_of_day || "—"}
+              </strong>
             </div>
 
             <div>
               <span>Prescribed By</span>
-              <strong>{selectedMedicine.prescribed_by || "—"}</strong>
+
+              <strong>
+                {selectedMedicine.prescribed_by || "—"}
+              </strong>
             </div>
 
             <div>
               <span>Start Date</span>
-              <strong>{formatDate(selectedMedicine.start_date)}</strong>
+
+              <strong>
+                {formatDate(selectedMedicine.start_date)}
+              </strong>
             </div>
 
             <div>
               <span>End Date</span>
-              <strong>{formatDate(selectedMedicine.end_date)}</strong>
+
+              <strong>
+                {formatDate(selectedMedicine.end_date)}
+              </strong>
             </div>
 
             <div>
               <span>Status</span>
+
               <strong className="medicineActive">
-                {selectedMedicine.status}
+                {selectedMedicine.status || "—"}
               </strong>
             </div>
+
           </div>
 
           <div className="medicineInstructions">
+
             <span>Instructions</span>
-            <strong>{selectedMedicine.instructions || "—"}</strong>
+
+            <strong>
+              {selectedMedicine.instructions || "—"}
+            </strong>
+
           </div>
 
           <div className="medicationAdministration">
+
             <div className="administrationHeader">
+
               <div>
                 <h3>Medication Administration</h3>
-                <p>Record whether the medicine was given to the resident.</p>
+
+                <p>
+                  Record whether the medicine was given to the resident.
+                </p>
               </div>
+
             </div>
 
             {medicineAdministration.length > 0 ? (
+
               <div className="administrationTable">
+
                 <div className="administrationRow administrationTableHeader">
                   <span>Date</span>
                   <span>Time</span>
@@ -312,27 +407,34 @@ function Medicines() {
                 </div>
 
                 {medicineAdministration.map((record) => (
+
                   <div
                     className="administrationRow"
                     key={record.administration_id}
                   >
+
                     <span>
                       {formatAdministrationDate(
                         record.administered_date
                       )}
                     </span>
 
-                    <span>{record.administered_time}</span>
+                    <span>
+                      {record.administered_time || "—"}
+                    </span>
 
                     <span>
                       {record.administered_by || "Not recorded"}
                     </span>
 
                     <label className="medicationCheckbox">
+
                       <input
                         type="checkbox"
                         checked={record.status === "Given"}
-                        onChange={() => toggleMedication(record)}
+                        onChange={() =>
+                          toggleMedication(record)
+                        }
                       />
 
                       <span>
@@ -340,36 +442,66 @@ function Medicines() {
                           ? "Given"
                           : "Not Given"}
                       </span>
+
                     </label>
+
                   </div>
+
                 ))}
+
               </div>
+
             ) : (
+
               <div className="noAdministration">
                 No administration records available.
               </div>
+
             )}
+
           </div>
+
         </div>
+
       </div>
     );
   }
 
+  // --------------------------------------------------
+  // ADD MEDICINE FORM
+  // --------------------------------------------------
+
   if (showAddForm) {
+
     return (
       <div className="medicines">
+
         <div className="medicineHeader">
-          <button className="medicineBackBtn" onClick={handleCancel}>
+
+          <button
+            className="medicineBackBtn"
+            onClick={handleCancel}
+          >
             ← Back to Medicines
           </button>
 
           <h2>Add Medicine</h2>
-          <p>Enter the medicine details for a resident</p>
+
+          <p>
+            Enter the medicine details for a resident
+          </p>
+
         </div>
 
-        <form className="addMedicineForm" onSubmit={handleAddMedicine}>
+        <form
+          className="addMedicineForm"
+          onSubmit={handleAddMedicine}
+        >
+
           <div className="medicineFormGrid">
+
             <div className="medicineFormGroup">
+
               <label>
                 Resident <span>*</span>
               </label>
@@ -378,21 +510,30 @@ function Medicines() {
                 name="resident_id"
                 value={newMedicine.resident_id}
                 onChange={handleInputChange}
+                required
               >
-                <option value="">Select resident</option>
+
+                <option value="">
+                  Select resident
+                </option>
 
                 {residents.map((resident) => (
+
                   <option
                     key={resident.resident_id}
                     value={resident.resident_id}
                   >
                     {resident.name}
                   </option>
+
                 ))}
+
               </select>
+
             </div>
 
             <div className="medicineFormGroup">
+
               <label>
                 Medicine Name <span>*</span>
               </label>
@@ -403,10 +544,13 @@ function Medicines() {
                 value={newMedicine.medicine_name}
                 onChange={handleInputChange}
                 placeholder="e.g. Amlodipine"
+                required
               />
+
             </div>
 
             <div className="medicineFormGroup">
+
               <label>
                 Dosage <span>*</span>
               </label>
@@ -417,10 +561,13 @@ function Medicines() {
                 value={newMedicine.dosage}
                 onChange={handleInputChange}
                 placeholder="e.g. 5mg"
+                required
               />
+
             </div>
 
             <div className="medicineFormGroup">
+
               <label>
                 Frequency <span>*</span>
               </label>
@@ -429,38 +576,79 @@ function Medicines() {
                 name="frequency"
                 value={newMedicine.frequency}
                 onChange={handleInputChange}
+                required
               >
-                <option value="">Select frequency</option>
-                <option value="Once Daily">Once Daily</option>
-                <option value="Twice Daily">Twice Daily</option>
+
+                <option value="">
+                  Select frequency
+                </option>
+
+                <option value="Once Daily">
+                  Once Daily
+                </option>
+
+                <option value="Twice Daily">
+                  Twice Daily
+                </option>
+
                 <option value="Three Times Daily">
                   Three Times Daily
                 </option>
-                <option value="As Needed">As Needed</option>
+
+                <option value="As Needed">
+                  As Needed
+                </option>
+
               </select>
+
             </div>
 
             <div className="medicineFormGroup">
-              <label>Time of Day</label>
+
+              <label>
+                Time of Day
+              </label>
 
               <select
                 name="time_of_day"
                 value={newMedicine.time_of_day}
                 onChange={handleInputChange}
               >
-                <option value="">Select time</option>
-                <option value="Morning">Morning</option>
-                <option value="Afternoon">Afternoon</option>
-                <option value="Evening">Evening</option>
-                <option value="Night">Night</option>
+
+                <option value="">
+                  Select time
+                </option>
+
+                <option value="Morning">
+                  Morning
+                </option>
+
+                <option value="Afternoon">
+                  Afternoon
+                </option>
+
+                <option value="Evening">
+                  Evening
+                </option>
+
+                <option value="Night">
+                  Night
+                </option>
+
                 <option value="Morning, Evening">
                   Morning, Evening
                 </option>
-                <option value="When Required">When Required</option>
+
+                <option value="When Required">
+                  When Required
+                </option>
+
               </select>
+
             </div>
 
             <div className="medicineFormGroup">
+
               <label>
                 Start Date <span>*</span>
               </label>
@@ -470,11 +658,16 @@ function Medicines() {
                 name="start_date"
                 value={newMedicine.start_date}
                 onChange={handleInputChange}
+                required
               />
+
             </div>
 
             <div className="medicineFormGroup">
-              <label>End Date</label>
+
+              <label>
+                End Date
+              </label>
 
               <input
                 type="date"
@@ -482,37 +675,58 @@ function Medicines() {
                 value={newMedicine.end_date}
                 onChange={handleInputChange}
               />
+
             </div>
 
             <div className="medicineFormGroup">
-              <label>Prescribed By</label>
 
-              <select
+              <label>
+                Prescribed By
+              </label>
+
+              <input
+                type="text"
                 name="prescribed_by"
                 value={newMedicine.prescribed_by}
                 onChange={handleInputChange}
-              >
-                <option value="">Select doctor</option>
-                <option value="Dr. Rahul Mehta">Dr. Rahul Mehta</option>
-              </select>
+                placeholder="e.g. Dr. Rahul Mehta"
+              />
+
             </div>
 
             <div className="medicineFormGroup">
-              <label>Status</label>
+
+              <label>
+                Status
+              </label>
 
               <select
                 name="status"
                 value={newMedicine.status}
                 onChange={handleInputChange}
               >
-                <option value="Active">Active</option>
-                <option value="Completed">Completed</option>
-                <option value="Stopped">Stopped</option>
+
+                <option value="Active">
+                  Active
+                </option>
+
+                <option value="Completed">
+                  Completed
+                </option>
+
+                <option value="Stopped">
+                  Stopped
+                </option>
+
               </select>
+
             </div>
 
             <div className="medicineFormGroup fullMedicineWidth">
-              <label>Instructions</label>
+
+              <label>
+                Instructions
+              </label>
 
               <textarea
                 name="instructions"
@@ -521,10 +735,13 @@ function Medicines() {
                 placeholder="e.g. Take after breakfast"
                 rows="3"
               />
+
             </div>
+
           </div>
 
           <div className="medicineFormActions">
+
             <button
               type="button"
               className="medicineCancelBtn"
@@ -533,21 +750,37 @@ function Medicines() {
               Cancel
             </button>
 
-            <button type="submit" className="medicineSaveBtn">
-              Add Medicine
+            <button
+              type="submit"
+              className="medicineSaveBtn"
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Add Medicine"}
             </button>
+
           </div>
+
         </form>
+
       </div>
     );
   }
 
+  // --------------------------------------------------
+  // MAIN MEDICINES PAGE
+  // --------------------------------------------------
+
   return (
     <div className="medicines">
+
       <div className="medicinePageHeader">
+
         <div>
           <h2>Medicines</h2>
-          <p>Manage resident medicines and prescriptions</p>
+
+          <p>
+            Manage resident medicines and prescriptions
+          </p>
         </div>
 
         <button
@@ -556,76 +789,140 @@ function Medicines() {
         >
           + Add Medicine
         </button>
+
       </div>
 
       <div className="medicineSearch">
+
         <input
           type="text"
           placeholder="Search resident or medicine..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+
       </div>
 
       <div className="medicineTable">
-        <table>
-          <thead>
-            <tr>
-              <th>Resident</th>
-              <th>Medicine</th>
-              <th>Dosage</th>
-              <th>Frequency</th>
-              <th>Time</th>
-              <th>End Date</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
 
-          <tbody>
-            {filteredMedicines.length > 0 ? (
-              filteredMedicines.map((medicine) => (
-                <tr key={medicine.medicine_id}>
-                  <td>{getResidentName(medicine.resident_id)}</td>
+        {loading ? (
 
-                  <td>
-                    <div className="medicineNameCell">
-                      <div className="medicineSmallIcon">💊</div>
-                      <span>{medicine.medicine_name}</span>
-                    </div>
-                  </td>
+          <div className="noMedicines">
+            Loading medicines...
+          </div>
 
-                  <td>{medicine.dosage}</td>
-                  <td>{medicine.frequency}</td>
-                  <td>{medicine.time_of_day || "—"}</td>
-                  <td>{formatDate(medicine.end_date)}</td>
+        ) : (
 
-                  <td>
-                    <span className="medicineStatus">
-                      {medicine.status}
-                    </span>
-                  </td>
+          <table>
 
-                  <td>
-                    <button
-                      className="medicineViewBtn"
-                      onClick={() => setSelectedMedicine(medicine)}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+            <thead>
+
               <tr>
-                <td colSpan="8" className="noMedicines">
-                  No medicines found.
-                </td>
+                <th>Resident</th>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Time</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+
+            </thead>
+
+            <tbody>
+
+              {filteredMedicines.length > 0 ? (
+
+                filteredMedicines.map((medicine) => (
+
+                  <tr key={medicine.medicine_id}>
+
+                    <td>
+                      {getResidentName(medicine.resident_id)}
+                    </td>
+
+                    <td>
+
+                      <div className="medicineNameCell">
+
+                        <div className="medicineSmallIcon">
+                          💊
+                        </div>
+
+                        <span>
+                          {medicine.medicine_name}
+                        </span>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+                      {medicine.dosage}
+                    </td>
+
+                    <td>
+                      {medicine.frequency}
+                    </td>
+
+                    <td>
+                      {medicine.time_of_day || "—"}
+                    </td>
+
+                    <td>
+                      {formatDate(medicine.end_date)}
+                    </td>
+
+                    <td>
+
+                      <span className="medicineStatus">
+                        {medicine.status}
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <button
+                        type="button"
+                        className="medicineViewBtn"
+                        onClick={() =>
+                          setSelectedMedicine(medicine)
+                        }
+                      >
+                        View
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                ))
+
+              ) : (
+
+                <tr>
+
+                  <td
+                    colSpan="8"
+                    className="noMedicines"
+                  >
+                    No medicines found.
+                  </td>
+
+                </tr>
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        )}
+
       </div>
+
     </div>
   );
 }

@@ -1,116 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Residents.css";
 
-const initialResidents = [
-  {
-    resident_id: 1,
-    name: "Mrs. Ayesha Khan",
-    age: 72,
-    gender: "Female",
-    room_no: "A-101",
-    contact: "9876543210",
-    emergency_contact: "9876543001",
-    address: "Pune, Maharashtra",
-    health_status: "Stable",
-    blood_type: "B+",
-    staff_assigned: "Nurse Maria",
-    medical_history: "Hypertension, Arthritis",
-    allergies: "Penicillin",
-    medicines: "Amlodipine 5mg",
-    diet: "Low Salt Diet",
-    blood_pressure: "128/82",
-    sugar: "105 mg/dL",
-    pulse: "76 bpm",
-    oxygen: "98%",
-    weight: "62 kg",
-    height: "158 cm",
-    other_notes: "Regular monitoring required",
-    upcoming_appointment: "2026-09-20T10:30",
-    birthday: "1954-08-10",
-    profile_image: null,
-  },
-  {
-    resident_id: 2,
-    name: "Mr. Ahmed Ali",
-    age: 68,
-    gender: "Male",
-    room_no: "A-102",
-    contact: "9876543211",
-    emergency_contact: "9876543002",
-    address: "Pune, Maharashtra",
-    health_status: "Needs Attention",
-    blood_type: "O+",
-    staff_assigned: "Nurse Sarah",
-    medical_history: "Diabetes",
-    allergies: "None",
-    medicines: "Metformin 500mg",
-    diet: "Diabetic Diet",
-    blood_pressure: "135/85",
-    sugar: "145 mg/dL",
-    pulse: "80 bpm",
-    oxygen: "97%",
-    weight: "70 kg",
-    height: "172 cm",
-    other_notes: "Blood sugar monitoring",
-    upcoming_appointment: "2026-09-21T12:00",
-    birthday: "1958-08-14",
-    profile_image: null,
-  },
-  {
-    resident_id: 3,
-    name: "Mrs. Sara Begum",
-    age: 75,
-    gender: "Female",
-    room_no: "B-201",
-    contact: "9876543212",
-    emergency_contact: "9876543003",
-    address: "Pune, Maharashtra",
-    health_status: "Stable",
-    blood_type: "A+",
-    staff_assigned: "Nurse Aisha",
-    medical_history: "Mild Arthritis",
-    allergies: "None",
-    medicines: "Paracetamol 500mg",
-    diet: "Balanced Diet",
-    blood_pressure: "122/80",
-    sugar: "98 mg/dL",
-    pulse: "74 bpm",
-    oxygen: "99%",
-    weight: "59 kg",
-    height: "155 cm",
-    other_notes: "Daily walking recommended",
-    upcoming_appointment: "2026-09-22T14:00",
-    birthday: "1951-08-18",
-    profile_image: null,
-  },
-  {
-    resident_id: 4,
-    name: "Mr. Raj Sharma",
-    age: 70,
-    gender: "Male",
-    room_no: "B-202",
-    contact: "9876543213",
-    emergency_contact: "9876543004",
-    address: "Pune, Maharashtra",
-    health_status: "Stable",
-    blood_type: "AB+",
-    staff_assigned: "Nurse John",
-    medical_history: "High Cholesterol",
-    allergies: "None",
-    medicines: "Atorvastatin 10mg",
-    diet: "Low Fat Diet",
-    blood_pressure: "125/80",
-    sugar: "102 mg/dL",
-    pulse: "72 bpm",
-    oxygen: "98%",
-    weight: "68 kg",
-    height: "169 cm",
-    other_notes: "Routine health check required",
-    upcoming_appointment: "2026-09-23T11:00",
-    birthday: "1956-09-05",
-    profile_image: null,
-  },
-];
+const API = "http://127.0.0.1:5000";
 
 const emptyResident = {
   name: "",
@@ -183,14 +74,43 @@ function formatDateTime(date) {
 }
 
 function Residents() {
-  const [residents, setResidents] = useState(initialResidents);
+  const [residents, setResidents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedResident, setSelectedResident] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newResident, setNewResident] = useState(emptyResident);
+  const [loading, setLoading] = useState(true);
+
+  // LOAD RESIDENTS FROM FLASK + SQLITE
+  const loadResidents = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(`${API}/api/residents`);
+
+      if (!response.ok) {
+        throw new Error("Could not load residents");
+      }
+
+      const data = await response.json();
+
+      setResidents(data);
+    } catch (error) {
+      console.error("Error loading residents:", error);
+      alert("Could not connect to the backend.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadResidents();
+  }, []);
 
   const filteredResidents = residents.filter((resident) =>
-    resident.name.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    (resident.name || "")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase().trim())
   );
 
   const handleInputChange = (e) => {
@@ -236,7 +156,8 @@ function Residents() {
     });
   };
 
-  const handleAddResident = (e) => {
+  // SAVE NEW RESIDENT TO FLASK + SQLITE
+  const handleAddResident = async (e) => {
     e.preventDefault();
 
     if (
@@ -250,9 +171,9 @@ function Residents() {
       return;
     }
 
-    const resident = {
-      resident_id: Date.now(),
+    const residentData = {
       name: newResident.name,
+      date_of_birth: newResident.date_of_birth,
       age: newResident.age,
       gender: newResident.gender,
       room_no: newResident.room_no,
@@ -275,19 +196,43 @@ function Residents() {
       other_notes: newResident.other_notes,
       upcoming_appointment: newResident.upcoming_appointment,
       birthday: newResident.birthday,
-      profile_image: newResident.profile_image_preview,
+      profile_image: null,
     };
 
-    setResidents([...residents, resident]);
-    setNewResident(emptyResident);
-    setShowAddForm(false);
+    try {
+      const response = await fetch(`${API}/api/residents`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(residentData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to add resident");
+      }
+
+      alert("Resident added successfully!");
+
+      await loadResidents();
+
+      setNewResident({ ...emptyResident });
+      setShowAddForm(false);
+    } catch (error) {
+      console.error("Error adding resident:", error);
+
+      alert(`Could not add resident: ${error.message}`);
+    }
   };
 
   const handleCancelAdd = () => {
-    setNewResident(emptyResident);
+    setNewResident({ ...emptyResident });
     setShowAddForm(false);
   };
 
+  // RESIDENT PROFILE
   if (selectedResident) {
     return (
       <div className="residentProfile">
@@ -311,7 +256,7 @@ function Residents() {
                   alt={selectedResident.name}
                 />
               ) : (
-                selectedResident.name.charAt(0)
+                selectedResident.name?.charAt(0)
               )}
             </div>
 
@@ -358,7 +303,9 @@ function Residents() {
             <div className="infoRow">
               <div className="infoItem">
                 <span>Emergency Contact</span>
-                <strong>{selectedResident.emergency_contact || "—"}</strong>
+                <strong>
+                  {selectedResident.emergency_contact || "—"}
+                </strong>
               </div>
 
               <div className="infoItem">
@@ -372,7 +319,9 @@ function Residents() {
             <div className="infoRow">
               <div className="fullInfo">
                 <span>Medical History</span>
-                <strong>{selectedResident.medical_history || "—"}</strong>
+                <strong>
+                  {selectedResident.medical_history || "—"}
+                </strong>
               </div>
 
               <div className="fullInfo">
@@ -400,6 +349,7 @@ function Residents() {
             <div className="healthGrid">
               <div className="healthItem">
                 <span>Health Status</span>
+
                 <strong
                   className={
                     selectedResident.health_status === "Stable"
@@ -413,7 +363,9 @@ function Residents() {
 
               <div className="healthItem">
                 <span>Blood Pressure</span>
-                <strong>{selectedResident.blood_pressure || "—"}</strong>
+                <strong>
+                  {selectedResident.blood_pressure || "—"}
+                </strong>
               </div>
 
               <div className="healthItem">
@@ -452,13 +404,17 @@ function Residents() {
             <div className="infoRow">
               <div className="infoItem">
                 <span>Date of Birth</span>
-                <strong>{formatDate(selectedResident.birthday)}</strong>
+                <strong>
+                  {formatDate(selectedResident.date_of_birth)}
+                </strong>
               </div>
 
               <div className="infoItem">
                 <span>Upcoming Appointment</span>
                 <strong>
-                  {formatDateTime(selectedResident.upcoming_appointment)}
+                  {formatDateTime(
+                    selectedResident.upcoming_appointment
+                  )}
                 </strong>
               </div>
             </div>
@@ -468,6 +424,7 @@ function Residents() {
     );
   }
 
+  // ADD RESIDENT FORM
   if (showAddForm) {
     return (
       <div className="residents">
@@ -482,6 +439,7 @@ function Residents() {
 
         <form className="addResidentForm" onSubmit={handleAddResident}>
           <div className="formGrid">
+
             <div className="formGroup imageGroup">
               <label>Profile Photo</label>
 
@@ -627,7 +585,9 @@ function Residents() {
                 onChange={handleInputChange}
               >
                 <option value="Stable">Stable</option>
-                <option value="Needs Attention">Needs Attention</option>
+                <option value="Needs Attention">
+                  Needs Attention
+                </option>
                 <option value="Critical">Critical</option>
               </select>
             </div>
@@ -836,6 +796,7 @@ function Residents() {
     );
   }
 
+  // RESIDENT LIST
   return (
     <div className="residents">
       <div className="residentsHeader">
@@ -876,7 +837,13 @@ function Residents() {
           </thead>
 
           <tbody>
-            {filteredResidents.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="7" className="noResidents">
+                  Loading residents...
+                </td>
+              </tr>
+            ) : filteredResidents.length > 0 ? (
               filteredResidents.map((resident) => (
                 <tr key={resident.resident_id}>
                   <td>
@@ -888,7 +855,7 @@ function Residents() {
                             alt={resident.name}
                           />
                         ) : (
-                          resident.name.charAt(0)
+                          resident.name?.charAt(0)
                         )}
                       </div>
 

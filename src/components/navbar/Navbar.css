@@ -104,3 +104,148 @@
     color:#728A6E;
     margin-top:4px;
 }
+
+/* =========================================================
+   LOGIN POPUP
+   ========================================================= */
+
+.loginOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loginModal {
+    width: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
+}
+
+.closeLogin {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    background: #f5f8f5;
+    color: #728a6e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeLogin:hover {
+    background: var(--sidebar-hover);
+    color: white;
+}
+
+.loginIcon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #f0f5ef;
+    color: #728a6e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 32px;
+}
+
+.loginModal h2 {
+    text-align: center;
+    margin: 0;
+    color: var(--text);
+    font-size: 25px;
+}
+
+.loginSubtitle {
+    text-align: center;
+    color: #728a6e;
+    font-size: 13px;
+    margin: 8px 0 25px;
+}
+
+.loginModal form {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginModal label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 7px;
+}
+
+.loginModal input,
+.loginModal select {
+    width: 100%;
+    height: 45px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 13px;
+    margin-bottom: 17px;
+    font-size: 14px;
+    background: #f8faf8;
+    color: var(--text);
+    box-sizing: border-box;
+}
+
+.loginModal input:focus,
+.loginModal select:focus {
+    outline: none;
+    border-color: #728a6e;
+}
+
+.submitLogin {
+    height: 46px;
+    border: none;
+    border-radius: 11px;
+    background: var(--sidebar-hover);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.submitLogin:hover {
+    opacity: 0.9;
+}
+
+.submitLogin:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.loginMessage {
+    padding: 11px;
+    border-radius: 9px;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.successMessage {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.errorMessage {
+    background: #ffebee;
+    color: #c62828;
+}

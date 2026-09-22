@@ -1,75 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Activities.css";
 
-const residents = [
-  { resident_id: 1, name: "Mrs. Ayesha Khan" },
-  { resident_id: 2, name: "Mr. Ahmed Ali" },
-  { resident_id: 3, name: "Mrs. Sara Begum" },
-  { resident_id: 4, name: "Mr. Raj Sharma" },
-];
-
-const initialActivities = [
-  {
-    activity_id: 1,
-    resident_id: 1,
-    activity_name: "Morning Walk",
-    activity_type: "Physical Activity",
-    activity_date: "2026-09-18",
-    activity_time: "07:30",
-    location: "Garden",
-    staff_assigned: "Nurse Maria",
-    description: "Light morning walk around the garden.",
-    completed: true,
-  },
-  {
-    activity_id: 2,
-    resident_id: 2,
-    activity_name: "Music Therapy",
-    activity_type: "Recreation",
-    activity_date: "2026-09-18",
-    activity_time: "10:00",
-    location: "Activity Room",
-    staff_assigned: "Nurse Sarah",
-    description: "Group music and singing session.",
-    completed: false,
-  },
-  {
-    activity_id: 3,
-    resident_id: 3,
-    activity_name: "Yoga Session",
-    activity_type: "Physical Activity",
-    activity_date: "2026-09-18",
-    activity_time: "09:00",
-    location: "Activity Room",
-    staff_assigned: "Nurse Aisha",
-    description: "Gentle yoga and stretching exercises.",
-    completed: true,
-  },
-  {
-    activity_id: 4,
-    resident_id: 4,
-    activity_name: "Reading Club",
-    activity_type: "Mental Activity",
-    activity_date: "2026-09-18",
-    activity_time: "16:00",
-    location: "Library",
-    staff_assigned: "Nurse John",
-    description: "Reading and discussion of selected books.",
-    completed: false,
-  },
-  {
-    activity_id: 5,
-    resident_id: 2,
-    activity_name: "Jogging",
-    activity_type: "Physical Activity",
-    activity_date: "2026-06-07",
-    activity_time: "19:12",
-    location: "Garden",
-    staff_assigned: "Nurse Sarah",
-    description: "Light physical activity in the garden.",
-    completed: false,
-  },
-];
+const API = "http://127.0.0.1:5000";
 
 const emptyActivity = {
   resident_id: "",
@@ -81,14 +13,6 @@ const emptyActivity = {
   staff_assigned: "",
   description: "",
 };
-
-function getResidentName(id) {
-  const resident = residents.find(
-    (item) => item.resident_id === Number(id)
-  );
-
-  return resident ? resident.name : "Unknown Resident";
-}
 
 function formatDate(date) {
   if (!date) return "—";
@@ -109,20 +33,85 @@ function getActivityIcon(type) {
 }
 
 function Activities() {
-  const [activities, setActivities] = useState(initialActivities);
+  const [residents, setResidents] = useState([]);
+  const [activities, setActivities] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedResident, setSelectedResident] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newActivity, setNewActivity] = useState(emptyActivity);
-  const [editingActivityId, setEditingActivityId] = useState(null);
+
+  const [newActivity, setNewActivity] =
+    useState(emptyActivity);
+
+  const [editingActivityId, setEditingActivityId] =
+    useState(null);
+
   const [editActivity, setEditActivity] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // LOAD RESIDENTS + ACTIVITIES
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      const [residentsResponse, activitiesResponse] =
+        await Promise.all([
+          fetch(`${API}/api/residents`),
+          fetch(`${API}/api/activities`),
+        ]);
+
+      if (!residentsResponse.ok) {
+        throw new Error("Failed to load residents");
+      }
+
+      if (!activitiesResponse.ok) {
+        throw new Error("Failed to load activities");
+      }
+
+      const residentsData =
+        await residentsResponse.json();
+
+      const activitiesData =
+        await activitiesResponse.json();
+
+      setResidents(residentsData);
+      setActivities(activitiesData);
+    } catch (error) {
+      console.error("Error loading activities:", error);
+
+      alert(
+        "Unable to load activities. Please make sure Flask is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const getResidentName = (id) => {
+    const resident = residents.find(
+      (item) =>
+        item.resident_id === Number(id)
+    );
+
+    return resident
+      ? resident.name
+      : "Unknown Resident";
+  };
 
   const residentRecords = residents
     .map((resident) => {
-      const residentActivities = activities.filter(
-        (activity) =>
-          activity.resident_id === resident.resident_id
-      );
+      const residentActivities =
+        activities.filter(
+          (activity) =>
+            Number(activity.resident_id) ===
+            Number(resident.resident_id)
+        );
 
       return {
         ...resident,
@@ -130,19 +119,24 @@ function Activities() {
       };
     })
     .filter((resident) => {
-      const search = searchTerm.toLowerCase().trim();
+      const search =
+        searchTerm.toLowerCase().trim();
+
+      if (!search) return true;
 
       return (
-        resident.name.toLowerCase().includes(search) ||
+        resident.name
+          .toLowerCase()
+          .includes(search) ||
         resident.activities.some(
           (activity) =>
-            activity.activity_name
+            (activity.activity_name || "")
               .toLowerCase()
               .includes(search) ||
-            activity.activity_type
+            (activity.activity_type || "")
               .toLowerCase()
               .includes(search) ||
-            activity.location
+            (activity.location || "")
               .toLowerCase()
               .includes(search)
         )
@@ -152,13 +146,14 @@ function Activities() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewActivity({
-      ...newActivity,
+    setNewActivity((current) => ({
+      ...current,
       [name]: value,
-    });
+    }));
   };
 
-  const handleAddActivity = (e) => {
+  // ADD ACTIVITY
+  const handleAddActivity = async (e) => {
     e.preventDefault();
 
     if (
@@ -173,16 +168,66 @@ function Activities() {
       return;
     }
 
-    const activity = {
-      activity_id: Date.now(),
-      ...newActivity,
-      resident_id: Number(newActivity.resident_id),
-      completed: false,
-    };
+    try {
+      setSaving(true);
 
-    setActivities([...activities, activity]);
-    setNewActivity(emptyActivity);
-    setShowAddForm(false);
+      const activityData = {
+        resident_id: Number(
+          newActivity.resident_id
+        ),
+        activity_name:
+          newActivity.activity_name,
+        activity_type:
+          newActivity.activity_type,
+        activity_date:
+          newActivity.activity_date,
+        activity_time:
+          newActivity.activity_time,
+        location: newActivity.location,
+        staff_assigned:
+          newActivity.staff_assigned,
+        description:
+          newActivity.description,
+        completed: 0,
+      };
+
+      const response = await fetch(
+        `${API}/api/activities`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(activityData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Failed to add activity"
+        );
+      }
+
+      alert("Activity added successfully!");
+
+      await loadData();
+
+      setNewActivity(emptyActivity);
+      setShowAddForm(false);
+    } catch (error) {
+      console.error(
+        "Error adding activity:",
+        error
+      );
+
+      alert(
+        `Unable to add activity: ${error.message}`
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -190,44 +235,146 @@ function Activities() {
     setShowAddForm(false);
   };
 
-  const toggleCompleted = (activityId) => {
-    setActivities((current) =>
-      current.map((activity) =>
-        activity.activity_id === activityId
-          ? {
-              ...activity,
-              completed: !activity.completed,
-            }
-          : activity
-      )
-    );
+  // TOGGLE COMPLETED
+  const toggleCompleted = async (activity) => {
+    try {
+      const newStatus = activity.completed
+        ? 0
+        : 1;
+
+      const response = await fetch(
+        `${API}/api/activities/${activity.activity_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            completed: newStatus,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to update activity"
+        );
+      }
+
+      await loadData();
+    } catch (error) {
+      console.error(
+        "Error updating activity:",
+        error
+      );
+
+      alert(
+        `Unable to update activity: ${error.message}`
+      );
+    }
   };
 
   const startEditing = (activity) => {
-    setEditingActivityId(activity.activity_id);
-    setEditActivity({ ...activity });
+    setEditingActivityId(
+      activity.activity_id
+    );
+
+    setEditActivity({
+      ...activity,
+      resident_id: Number(
+        activity.resident_id
+      ),
+      completed: activity.completed
+        ? 1
+        : 0,
+    });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
 
-    setEditActivity({
-      ...editActivity,
+    setEditActivity((current) => ({
+      ...current,
       [name]: value,
-    });
+    }));
   };
 
-  const saveEdit = () => {
-    setActivities((current) =>
-      current.map((activity) =>
-        activity.activity_id === editActivity.activity_id
-          ? editActivity
-          : activity
-      )
-    );
+  // SAVE EDIT
+  const saveEdit = async () => {
+    if (
+      !editActivity.activity_name ||
+      !editActivity.activity_type ||
+      !editActivity.activity_date ||
+      !editActivity.activity_time ||
+      !editActivity.location
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
-    setEditingActivityId(null);
-    setEditActivity(null);
+    try {
+      setSaving(true);
+
+      const updateData = {
+        resident_id: Number(
+          editActivity.resident_id
+        ),
+        activity_name:
+          editActivity.activity_name,
+        activity_type:
+          editActivity.activity_type,
+        activity_date:
+          editActivity.activity_date,
+        activity_time:
+          editActivity.activity_time,
+        location: editActivity.location,
+        staff_assigned:
+          editActivity.staff_assigned || "",
+        description:
+          editActivity.description || "",
+        completed:
+          editActivity.completed ? 1 : 0,
+      };
+
+      const response = await fetch(
+        `${API}/api/activities/${editActivity.activity_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to update activity"
+        );
+      }
+
+      await loadData();
+
+      setEditingActivityId(null);
+      setEditActivity(null);
+    } catch (error) {
+      console.error(
+        "Error saving activity:",
+        error
+      );
+
+      alert(
+        `Unable to save changes: ${error.message}`
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const cancelEdit = () => {
@@ -235,18 +382,34 @@ function Activities() {
     setEditActivity(null);
   };
 
-  if (selectedResident) {
-    const residentActivities = activities.filter(
-      (activity) =>
-        activity.resident_id === selectedResident.resident_id
+  if (loading) {
+    return (
+      <div className="activities">
+        <div className="activityHeader">
+          <h2>Activities</h2>
+          <p>Loading activities...</p>
+        </div>
+      </div>
     );
+  }
+
+  // RESIDENT DETAILS PAGE
+  if (selectedResident) {
+    const residentActivities =
+      activities.filter(
+        (activity) =>
+          Number(activity.resident_id) ===
+          Number(selectedResident.resident_id)
+      );
 
     return (
       <div className="activities">
         <div className="activityHeader">
           <button
             className="activityBackBtn"
-            onClick={() => setSelectedResident(null)}
+            onClick={() =>
+              setSelectedResident(null)
+            }
           >
             ← Back to Activities
           </button>
@@ -263,11 +426,17 @@ function Activities() {
             </div>
 
             <div>
-              <h3>{selectedResident.name}</h3>
+              <h3>
+                {selectedResident.name}
+              </h3>
 
               <p>
-                {residentActivities.length} activity
-                {residentActivities.length !== 1 ? "ies" : "y"}{" "}
+                {residentActivities.length}{" "}
+                activity
+                {residentActivities.length !==
+                1
+                  ? "ies"
+                  : "y"}{" "}
                 recorded
               </p>
             </div>
@@ -275,209 +444,264 @@ function Activities() {
 
           <div className="residentActivityList">
             {residentActivities.length > 0 ? (
-              residentActivities.map((activity) => (
-                <div
-                  className="residentActivityItem"
-                  key={activity.activity_id}
-                >
-                  {editingActivityId === activity.activity_id ? (
-                    <div className="activityEditBox">
-                      <div className="activityEditGrid">
-                        <div>
-                          <label>Activity Name</label>
+              residentActivities.map(
+                (activity) => (
+                  <div
+                    className="residentActivityItem"
+                    key={
+                      activity.activity_id
+                    }
+                  >
+                    {editingActivityId ===
+                    activity.activity_id ? (
+                      <div className="activityEditBox">
+                        <div className="activityEditGrid">
+                          <div>
+                            <label>
+                              Activity Name
+                            </label>
 
-                          <input
-                            type="text"
-                            name="activity_name"
-                            value={editActivity.activity_name}
-                            onChange={handleEditChange}
-                          />
+                            <input
+                              type="text"
+                              name="activity_name"
+                              value={
+                                editActivity.activity_name ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <label>
+                              Activity Type
+                            </label>
+
+                            <select
+                              name="activity_type"
+                              value={
+                                editActivity.activity_type ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            >
+                              <option value="Physical Activity">
+                                Physical Activity
+                              </option>
+
+                              <option value="Mental Activity">
+                                Mental Activity
+                              </option>
+
+                              <option value="Recreation">
+                                Recreation
+                              </option>
+
+                              <option value="Social Activity">
+                                Social Activity
+                              </option>
+
+                              <option value="Religious Activity">
+                                Religious Activity
+                              </option>
+
+                              <option value="Other">
+                                Other
+                              </option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label>Date</label>
+
+                            <input
+                              type="date"
+                              name="activity_date"
+                              value={
+                                editActivity.activity_date ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <label>Time</label>
+
+                            <input
+                              type="time"
+                              name="activity_time"
+                              value={
+                                editActivity.activity_time ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <label>Location</label>
+
+                            <input
+                              type="text"
+                              name="location"
+                              value={
+                                editActivity.location ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <label>
+                              Staff Assigned
+                            </label>
+
+                            <input
+                              type="text"
+                              name="staff_assigned"
+                              value={
+                                editActivity.staff_assigned ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                            />
+                          </div>
+
+                          <div className="fullActivityWidth">
+                            <label>
+                              Description
+                            </label>
+
+                            <textarea
+                              name="description"
+                              value={
+                                editActivity.description ||
+                                ""
+                              }
+                              onChange={
+                                handleEditChange
+                              }
+                              rows="3"
+                            />
+                          </div>
                         </div>
 
-                        <div>
-                          <label>Activity Type</label>
-
-                          <select
-                            name="activity_type"
-                            value={editActivity.activity_type}
-                            onChange={handleEditChange}
+                        <div className="editActions">
+                          <button
+                            className="editCancelBtn"
+                            onClick={cancelEdit}
+                            type="button"
                           >
-                            <option value="Physical Activity">
-                              Physical Activity
-                            </option>
+                            Cancel
+                          </button>
 
-                            <option value="Mental Activity">
-                              Mental Activity
-                            </option>
-
-                            <option value="Recreation">
-                              Recreation
-                            </option>
-
-                            <option value="Social Activity">
-                              Social Activity
-                            </option>
-
-                            <option value="Religious Activity">
-                              Religious Activity
-                            </option>
-
-                            <option value="Other">
-                              Other
-                            </option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label>Date</label>
-
-                          <input
-                            type="date"
-                            name="activity_date"
-                            value={editActivity.activity_date}
-                            onChange={handleEditChange}
-                          />
-                        </div>
-
-                        <div>
-                          <label>Time</label>
-
-                          <input
-                            type="time"
-                            name="activity_time"
-                            value={editActivity.activity_time}
-                            onChange={handleEditChange}
-                          />
-                        </div>
-
-                        <div>
-                          <label>Location</label>
-
-                          <input
-                            type="text"
-                            name="location"
-                            value={editActivity.location}
-                            onChange={handleEditChange}
-                          />
-                        </div>
-
-                        <div>
-                          <label>Staff Assigned</label>
-
-                          <select
-                            name="staff_assigned"
-                            value={editActivity.staff_assigned}
-                            onChange={handleEditChange}
+                          <button
+                            className="editSaveBtn"
+                            onClick={saveEdit}
+                            type="button"
+                            disabled={saving}
                           >
-                            <option value="">
-                              Select staff
-                            </option>
-
-                            <option value="Nurse Maria">
-                              Nurse Maria
-                            </option>
-
-                            <option value="Nurse Sarah">
-                              Nurse Sarah
-                            </option>
-
-                            <option value="Nurse Aisha">
-                              Nurse Aisha
-                            </option>
-
-                            <option value="Nurse John">
-                              Nurse John
-                            </option>
-                          </select>
-                        </div>
-
-                        <div className="fullActivityWidth">
-                          <label>Description</label>
-
-                          <textarea
-                            name="description"
-                            value={editActivity.description}
-                            onChange={handleEditChange}
-                            rows="3"
-                          />
+                            {saving
+                              ? "Saving..."
+                              : "Save Changes"}
+                          </button>
                         </div>
                       </div>
+                    ) : (
+                      <>
+                        <div className="residentActivityIcon">
+                          {getActivityIcon(
+                            activity.activity_type
+                          )}
+                        </div>
 
-                      <div className="editActions">
+                        <div className="residentActivityInfo">
+                          <h4>
+                            {
+                              activity.activity_name
+                            }
+                          </h4>
+
+                          <span>
+                            {
+                              activity.activity_type
+                            }
+                          </span>
+
+                          <p>
+                            {formatDate(
+                              activity.activity_date
+                            )}{" "}
+                            ·{" "}
+                            {
+                              activity.activity_time
+                            }{" "}
+                            ·{" "}
+                            {
+                              activity.location
+                            }
+                          </p>
+
+                          <small>
+                            {
+                              activity.description
+                            }
+                          </small>
+                        </div>
+
                         <button
-                          className="editCancelBtn"
-                          onClick={cancelEdit}
-                        >
-                          Cancel
-                        </button>
-
-                        <button
-                          className="editSaveBtn"
-                          onClick={saveEdit}
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="residentActivityIcon">
-                        {getActivityIcon(
-                          activity.activity_type
-                        )}
-                      </div>
-
-                      <div className="residentActivityInfo">
-                        <h4>{activity.activity_name}</h4>
-
-                        <span>
-                          {activity.activity_type}
-                        </span>
-
-                        <p>
-                          {formatDate(activity.activity_date)} ·{" "}
-                          {activity.activity_time} ·{" "}
-                          {activity.location}
-                        </p>
-
-                        <small>
-                          {activity.description}
-                        </small>
-                      </div>
-
-                      <button
-                        className="activityEditBtn"
-                        onClick={() =>
-                          startEditing(activity)
-                        }
-                      >
-                        ✏️ Edit
-                      </button>
-
-                      <label className="activityCheckbox">
-                        <input
-                          type="checkbox"
-                          checked={activity.completed}
-                          onChange={() =>
-                            toggleCompleted(
-                              activity.activity_id
+                          className="activityEditBtn"
+                          onClick={() =>
+                            startEditing(
+                              activity
                             )
                           }
-                        />
+                        >
+                          ✏️ Edit
+                        </button>
 
-                        <span>
-                          {activity.completed
-                            ? "Completed"
-                            : "Not Completed"}
-                        </span>
-                      </label>
-                    </>
-                  )}
-                </div>
-              ))
+                        <label className="activityCheckbox">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(
+                              activity.completed
+                            )}
+                            onChange={() =>
+                              toggleCompleted(
+                                activity
+                              )
+                            }
+                          />
+
+                          <span>
+                            {activity.completed
+                              ? "Completed"
+                              : "Not Completed"}
+                          </span>
+                        </label>
+                      </>
+                    )}
+                  </div>
+                )
+              )
             ) : (
               <div className="noResidentActivities">
-                No activities recorded for this resident.
+                No activities recorded for
+                this resident.
               </div>
             )}
           </div>
@@ -495,24 +719,32 @@ function Activities() {
               setShowAddForm(true);
             }}
           >
-            + Add Activity for {selectedResident.name}
+            + Add Activity for{" "}
+            {selectedResident.name}
           </button>
         </div>
       </div>
     );
   }
 
+  // ADD ACTIVITY PAGE
   if (showAddForm) {
     return (
       <div className="activities">
         <div className="activityHeader">
-          <button className="activityBackBtn" onClick={handleCancel}>
+          <button
+            className="activityBackBtn"
+            onClick={handleCancel}
+          >
             ← Back to Activities
           </button>
 
           <h2>Add Activity</h2>
 
-          <p>Schedule an activity for a resident</p>
+          <p>
+            Schedule an activity for a
+            resident
+          </p>
         </div>
 
         <form
@@ -527,63 +759,95 @@ function Activities() {
 
               <select
                 name="resident_id"
-                value={newActivity.resident_id}
-                onChange={handleInputChange}
+                value={
+                  newActivity.resident_id
+                }
+                onChange={
+                  handleInputChange
+                }
               >
-                <option value="">Select resident</option>
+                <option value="">
+                  Select resident
+                </option>
 
-                {residents.map((resident) => (
-                  <option
-                    key={resident.resident_id}
-                    value={resident.resident_id}
-                  >
-                    {resident.name}
-                  </option>
-                ))}
+                {residents.map(
+                  (resident) => (
+                    <option
+                      key={
+                        resident.resident_id
+                      }
+                      value={
+                        resident.resident_id
+                      }
+                    >
+                      {resident.name}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
             <div className="activityFormGroup">
               <label>
-                Activity Name <span>*</span>
+                Activity Name{" "}
+                <span>*</span>
               </label>
 
               <input
                 type="text"
                 name="activity_name"
-                value={newActivity.activity_name}
-                onChange={handleInputChange}
+                value={
+                  newActivity.activity_name
+                }
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. Morning Walk"
               />
             </div>
 
             <div className="activityFormGroup">
               <label>
-                Activity Type <span>*</span>
+                Activity Type{" "}
+                <span>*</span>
               </label>
 
               <select
                 name="activity_type"
-                value={newActivity.activity_type}
-                onChange={handleInputChange}
+                value={
+                  newActivity.activity_type
+                }
+                onChange={
+                  handleInputChange
+                }
               >
-                <option value="">Select activity type</option>
+                <option value="">
+                  Select activity type
+                </option>
+
                 <option value="Physical Activity">
                   Physical Activity
                 </option>
+
                 <option value="Mental Activity">
                   Mental Activity
                 </option>
+
                 <option value="Recreation">
                   Recreation
                 </option>
+
                 <option value="Social Activity">
                   Social Activity
                 </option>
+
                 <option value="Religious Activity">
                   Religious Activity
                 </option>
-                <option value="Other">Other</option>
+
+                <option value="Other">
+                  Other
+                </option>
               </select>
             </div>
 
@@ -595,8 +859,12 @@ function Activities() {
               <input
                 type="date"
                 name="activity_date"
-                value={newActivity.activity_date}
-                onChange={handleInputChange}
+                value={
+                  newActivity.activity_date
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
@@ -608,8 +876,12 @@ function Activities() {
               <input
                 type="time"
                 name="activity_time"
-                value={newActivity.activity_time}
-                onChange={handleInputChange}
+                value={
+                  newActivity.activity_time
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
@@ -621,34 +893,32 @@ function Activities() {
               <input
                 type="text"
                 name="location"
-                value={newActivity.location}
-                onChange={handleInputChange}
+                value={
+                  newActivity.location
+                }
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. Garden"
               />
             </div>
 
             <div className="activityFormGroup">
-              <label>Staff Assigned</label>
+              <label>
+                Staff Assigned
+              </label>
 
-              <select
+              <input
+                type="text"
                 name="staff_assigned"
-                value={newActivity.staff_assigned}
-                onChange={handleInputChange}
-              >
-                <option value="">Select staff</option>
-                <option value="Nurse Maria">
-                  Nurse Maria
-                </option>
-                <option value="Nurse Sarah">
-                  Nurse Sarah
-                </option>
-                <option value="Nurse Aisha">
-                  Nurse Aisha
-                </option>
-                <option value="Nurse John">
-                  Nurse John
-                </option>
-              </select>
+                value={
+                  newActivity.staff_assigned
+                }
+                onChange={
+                  handleInputChange
+                }
+                placeholder="e.g. Nurse Maria"
+              />
             </div>
 
             <div className="activityFormGroup fullActivityWidth">
@@ -656,8 +926,12 @@ function Activities() {
 
               <textarea
                 name="description"
-                value={newActivity.description}
-                onChange={handleInputChange}
+                value={
+                  newActivity.description
+                }
+                onChange={
+                  handleInputChange
+                }
                 placeholder="Enter activity details"
                 rows="4"
               />
@@ -676,8 +950,11 @@ function Activities() {
             <button
               type="submit"
               className="activitySaveBtn"
+              disabled={saving}
             >
-              Add Activity
+              {saving
+                ? "Adding..."
+                : "Add Activity"}
             </button>
           </div>
         </form>
@@ -685,6 +962,7 @@ function Activities() {
     );
   }
 
+  // MAIN ACTIVITIES PAGE
   return (
     <div className="activities">
       <div className="activityPageHeader">
@@ -692,13 +970,16 @@ function Activities() {
           <h2>Activities</h2>
 
           <p>
-            Manage resident activities and daily programs
+            Manage resident activities and
+            daily programs
           </p>
         </div>
 
         <button
           className="addActivityBtn"
-          onClick={() => setShowAddForm(true)}
+          onClick={() =>
+            setShowAddForm(true)
+          }
         >
           + Add Activity
         </button>
@@ -709,7 +990,9 @@ function Activities() {
           type="text"
           placeholder="Search resident or activity..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) =>
+            setSearchTerm(e.target.value)
+          }
         />
       </div>
 
@@ -727,78 +1010,120 @@ function Activities() {
 
           <tbody>
             {residentRecords.length > 0 ? (
-              residentRecords.map((resident) => {
-                const completedCount =
-                  resident.activities.filter(
-                    (activity) => activity.completed
-                  ).length;
+              residentRecords.map(
+                (resident) => {
+                  const completedCount =
+                    resident.activities.filter(
+                      (activity) =>
+                        Boolean(
+                          activity.completed
+                        )
+                    ).length;
 
-                return (
-                  <tr key={resident.resident_id}>
-                    <td>
-                      <strong>{resident.name}</strong>
-                    </td>
+                  return (
+                    <tr
+                      key={
+                        resident.resident_id
+                      }
+                    >
+                      <td>
+                        <strong>
+                          {resident.name}
+                        </strong>
+                      </td>
 
-                    <td>
-                      {resident.activities.length > 0 ? (
-                        <div className="activitySummary">
-                          {resident.activities
-                            .slice(0, 3)
-                            .map((activity) => (
-                              <span
-                                key={activity.activity_id}
-                              >
-                                {getActivityIcon(
-                                  activity.activity_type
-                                )}{" "}
-                                {activity.activity_name}
-                              </span>
-                            ))}
+                      <td>
+                        {resident.activities
+                          .length > 0 ? (
+                          <div className="activitySummary">
+                            {resident.activities
+                              .slice(0, 3)
+                              .map(
+                                (
+                                  activity
+                                ) => (
+                                  <span
+                                    key={
+                                      activity.activity_id
+                                    }
+                                  >
+                                    {getActivityIcon(
+                                      activity.activity_type
+                                    )}{" "}
+                                    {
+                                      activity.activity_name
+                                    }
+                                  </span>
+                                )
+                              )}
 
-                          {resident.activities.length > 3 && (
-                            <small>
-                              +
-                              {resident.activities.length - 3}{" "}
-                              more
-                            </small>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="noActivityText">
-                          No activities
+                            {resident
+                              .activities
+                              .length >
+                              3 && (
+                              <small>
+                                +
+                                {resident
+                                  .activities
+                                  .length -
+                                  3}{" "}
+                                more
+                              </small>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="noActivityText">
+                            No activities
+                          </span>
+                        )}
+                      </td>
+
+                      <td>
+                        <span className="activityCount">
+                          {
+                            resident
+                              .activities
+                              .length
+                          }
                         </span>
-                      )}
-                    </td>
+                      </td>
 
-                    <td>
-                      <span className="activityCount">
-                        {resident.activities.length}
-                      </span>
-                    </td>
+                      <td>
+                        <span className="completionCount">
+                          {
+                            completedCount
+                          }
+                          /
+                          {
+                            resident
+                              .activities
+                              .length
+                          }
+                        </span>
+                      </td>
 
-                    <td>
-                      <span className="completionCount">
-                        {completedCount}/
-                        {resident.activities.length}
-                      </span>
-                    </td>
-
-                    <td>
-                      <button
-                        className="activityViewBtn"
-                        onClick={() =>
-                          setSelectedResident(resident)
-                        }
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
+                      <td>
+                        <button
+                          className="activityViewBtn"
+                          onClick={() =>
+                            setSelectedResident(
+                              resident
+                            )
+                          }
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                }
+              )
             ) : (
               <tr>
-                <td colSpan="5" className="noActivities">
+                <td
+                  colSpan="5"
+                  className="noActivities"
+                >
                   No activities found.
                 </td>
               </tr>

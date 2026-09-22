@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Python backend
+backend/venv/
+backend/__pycache__/
+backend/elderly_home.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+dist/
+
+# Environment files
+.env

@@ -1,60 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Donations.css";
 
-const initialDonations = [
-  {
-    donation_id: 1,
-    donor_name: "Aisha Foundation",
-    contact: "9876501234",
-    amount: "25000",
-    donation_type: "Money",
-    donation_date: "2026-09-18",
-    payment_method: "Bank Transfer",
-    reference_number: "DON-2026-001",
-    purpose: "General support for elderly residents",
-    notes: "Monthly contribution",
-    received: true,
-  },
-  {
-    donation_id: 2,
-    donor_name: "Rahul Sharma",
-    contact: "9876501235",
-    amount: "5000",
-    donation_type: "Money",
-    donation_date: "2026-09-17",
-    payment_method: "UPI",
-    reference_number: "DON-2026-002",
-    purpose: "Medical care support",
-    notes: "For resident medical expenses",
-    received: true,
-  },
-  {
-    donation_id: 3,
-    donor_name: "Sara Khan",
-    contact: "9876501236",
-    amount: "0",
-    donation_type: "Food",
-    donation_date: "2026-09-16",
-    payment_method: "Other",
-    reference_number: "DON-2026-003",
-    purpose: "Food supplies",
-    notes: "Rice, pulses and vegetables",
-    received: false,
-  },
-  {
-    donation_id: 4,
-    donor_name: "Green Care Trust",
-    contact: "9876501237",
-    amount: "15000",
-    donation_type: "Money",
-    donation_date: "2026-09-15",
-    payment_method: "Cheque",
-    reference_number: "DON-2026-004",
-    purpose: "Activity and recreation support",
-    notes: "Received for activity programs",
-    received: true,
-  },
-];
+const API = "http://127.0.0.1:5000";
 
 const emptyDonation = {
   donor_name: "",
@@ -85,34 +32,86 @@ function formatAmount(amount) {
 }
 
 function Donations() {
-  const [donations, setDonations] = useState(initialDonations);
+  const [donations, setDonations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDonation, setSelectedDonation] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newDonation, setNewDonation] = useState(emptyDonation);
+  const [newDonation, setNewDonation] =
+    useState(emptyDonation);
 
-  const filteredDonations = donations.filter((donation) => {
-    const search = searchTerm.toLowerCase().trim();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-    return (
-      donation.donor_name.toLowerCase().includes(search) ||
-      donation.donation_type.toLowerCase().includes(search) ||
-      donation.payment_method.toLowerCase().includes(search) ||
-      donation.reference_number.toLowerCase().includes(search) ||
-      donation.purpose.toLowerCase().includes(search)
-    );
-  });
+  // LOAD DONATIONS
+  const loadDonations = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `${API}/api/donations`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load donations");
+      }
+
+      const data = await response.json();
+
+      setDonations(data);
+    } catch (error) {
+      console.error(
+        "Error loading donations:",
+        error
+      );
+
+      alert(
+        "Unable to load donations. Please make sure Flask is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDonations();
+  }, []);
+
+  const filteredDonations = donations.filter(
+    (donation) => {
+      const search =
+        searchTerm.toLowerCase().trim();
+
+      return (
+        (donation.donor_name || "")
+          .toLowerCase()
+          .includes(search) ||
+        (donation.donation_type || "")
+          .toLowerCase()
+          .includes(search) ||
+        (donation.payment_method || "")
+          .toLowerCase()
+          .includes(search) ||
+        (donation.reference_number || "")
+          .toLowerCase()
+          .includes(search) ||
+        (donation.purpose || "")
+          .toLowerCase()
+          .includes(search)
+      );
+    }
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewDonation({
-      ...newDonation,
+    setNewDonation((current) => ({
+      ...current,
       [name]: value,
-    });
+    }));
   };
 
-  const handleAddDonation = (e) => {
+  // ADD DONATION
+  const handleAddDonation = async (e) => {
     e.preventDefault();
 
     if (
@@ -125,15 +124,66 @@ function Donations() {
       return;
     }
 
-    const donation = {
-      donation_id: Date.now(),
-      ...newDonation,
-      received: false,
-    };
+    try {
+      setSaving(true);
 
-    setDonations([...donations, donation]);
-    setNewDonation(emptyDonation);
-    setShowAddForm(false);
+      const donationData = {
+        donor_name: newDonation.donor_name,
+        contact: newDonation.contact,
+        amount: newDonation.amount
+          ? Number(newDonation.amount)
+          : 0,
+        donation_type:
+          newDonation.donation_type,
+        donation_date:
+          newDonation.donation_date,
+        payment_method:
+          newDonation.payment_method,
+        reference_number:
+          newDonation.reference_number,
+        purpose: newDonation.purpose,
+        notes: newDonation.notes,
+        received: 0,
+      };
+
+      const response = await fetch(
+        `${API}/api/donations`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(donationData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to add donation"
+        );
+      }
+
+      alert("Donation added successfully!");
+
+      await loadDonations();
+
+      setNewDonation(emptyDonation);
+      setShowAddForm(false);
+    } catch (error) {
+      console.error(
+        "Error adding donation:",
+        error
+      );
+
+      alert(
+        `Unable to add donation: ${error.message}`
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -141,87 +191,163 @@ function Donations() {
     setShowAddForm(false);
   };
 
-  const toggleReceived = (donationId) => {
-    setDonations((current) =>
-      current.map((donation) =>
-        donation.donation_id === donationId
-          ? {
-              ...donation,
-              received: !donation.received,
-            }
-          : donation
-      )
-    );
+  // TOGGLE RECEIVED
+  const toggleReceived = async (donation) => {
+    try {
+      const newStatus = donation.received
+        ? 0
+        : 1;
+
+      const response = await fetch(
+        `${API}/api/donations/${donation.donation_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            received: newStatus,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to update donation"
+        );
+      }
+
+      await loadDonations();
+
+      // Keep details page updated if currently open
+      if (
+        selectedDonation &&
+        selectedDonation.donation_id ===
+          donation.donation_id
+      ) {
+        setSelectedDonation({
+          ...donation,
+          received: newStatus,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Error updating donation:",
+        error
+      );
+
+      alert(
+        `Unable to update donation: ${error.message}`
+      );
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="donations">
+        <div className="donationHeader">
+          <h2>Donations</h2>
+          <p>Loading donations...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // DONATION DETAILS
   if (selectedDonation) {
     return (
       <div className="donations">
         <div className="donationHeader">
           <button
             className="donationBackBtn"
-            onClick={() => setSelectedDonation(null)}
+            onClick={() =>
+              setSelectedDonation(null)
+            }
           >
             ← Back to Donations
           </button>
 
           <h2>Donation Details</h2>
 
-          <p>{selectedDonation.donor_name}</p>
+          <p>
+            {selectedDonation.donor_name}
+          </p>
         </div>
 
         <div className="donationProfileCard">
           <div className="donationTitle">
-            <div className="donationIcon">🎁</div>
+            <div className="donationIcon">
+              🎁
+            </div>
 
             <div>
-              <h3>{selectedDonation.donor_name}</h3>
+              <h3>
+                {selectedDonation.donor_name}
+              </h3>
 
-              <span>{selectedDonation.donation_type}</span>
+              <span>
+                {selectedDonation.donation_type}
+              </span>
             </div>
           </div>
 
           <div className="donationInfoGrid">
             <div>
               <span>Donor Name</span>
-              <strong>{selectedDonation.donor_name}</strong>
+              <strong>
+                {selectedDonation.donor_name}
+              </strong>
             </div>
 
             <div>
               <span>Contact</span>
-              <strong>{selectedDonation.contact || "—"}</strong>
+              <strong>
+                {selectedDonation.contact ||
+                  "—"}
+              </strong>
             </div>
 
             <div>
               <span>Amount</span>
               <strong>
-                {formatAmount(selectedDonation.amount)}
+                {formatAmount(
+                  selectedDonation.amount
+                )}
               </strong>
             </div>
 
             <div>
               <span>Donation Type</span>
-              <strong>{selectedDonation.donation_type}</strong>
+              <strong>
+                {selectedDonation.donation_type}
+              </strong>
             </div>
 
             <div>
               <span>Donation Date</span>
               <strong>
-                {formatDate(selectedDonation.donation_date)}
+                {formatDate(
+                  selectedDonation.donation_date
+                )}
               </strong>
             </div>
 
             <div>
               <span>Payment Method</span>
               <strong>
-                {selectedDonation.payment_method || "—"}
+                {selectedDonation.payment_method ||
+                  "—"}
               </strong>
             </div>
 
             <div>
               <span>Reference Number</span>
               <strong>
-                {selectedDonation.reference_number || "—"}
+                {selectedDonation.reference_number ||
+                  "—"}
               </strong>
             </div>
           </div>
@@ -229,14 +355,17 @@ function Donations() {
           <div className="donationDetailSection">
             <span>Purpose</span>
 
-            <strong>{selectedDonation.purpose}</strong>
+            <strong>
+              {selectedDonation.purpose}
+            </strong>
           </div>
 
           <div className="donationDetailSection">
             <span>Notes</span>
 
             <strong>
-              {selectedDonation.notes || "No additional notes"}
+              {selectedDonation.notes ||
+                "No additional notes"}
             </strong>
           </div>
 
@@ -244,9 +373,13 @@ function Donations() {
             <label className="receivedCheckbox">
               <input
                 type="checkbox"
-                checked={selectedDonation.received}
+                checked={Boolean(
+                  selectedDonation.received
+                )}
                 onChange={() =>
-                  toggleReceived(selectedDonation.donation_id)
+                  toggleReceived(
+                    selectedDonation
+                  )
                 }
               />
 
@@ -262,11 +395,15 @@ function Donations() {
     );
   }
 
+  // ADD DONATION FORM
   if (showAddForm) {
     return (
       <div className="donations">
         <div className="donationHeader">
-          <button className="donationBackBtn" onClick={handleCancel}>
+          <button
+            className="donationBackBtn"
+            onClick={handleCancel}
+          >
             ← Back to Donations
           </button>
 
@@ -288,8 +425,12 @@ function Donations() {
               <input
                 type="text"
                 name="donor_name"
-                value={newDonation.donor_name}
-                onChange={handleInputChange}
+                value={
+                  newDonation.donor_name
+                }
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. Aisha Foundation"
               />
             </div>
@@ -301,7 +442,9 @@ function Donations() {
                 type="text"
                 name="contact"
                 value={newDonation.contact}
-                onChange={handleInputChange}
+                onChange={
+                  handleInputChange
+                }
                 placeholder="Phone number"
               />
             </div>
@@ -314,71 +457,130 @@ function Donations() {
                 name="amount"
                 min="0"
                 value={newDonation.amount}
-                onChange={handleInputChange}
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. 10000"
               />
             </div>
 
             <div className="donationFormGroup">
               <label>
-                Donation Type <span>*</span>
+                Donation Type{" "}
+                <span>*</span>
               </label>
 
               <select
                 name="donation_type"
-                value={newDonation.donation_type}
-                onChange={handleInputChange}
+                value={
+                  newDonation.donation_type
+                }
+                onChange={
+                  handleInputChange
+                }
               >
-                <option value="">Select type</option>
-                <option value="Money">Money</option>
-                <option value="Food">Food</option>
-                <option value="Clothing">Clothing</option>
-                <option value="Medicine">Medicine</option>
-                <option value="Equipment">Equipment</option>
-                <option value="Other">Other</option>
+                <option value="">
+                  Select type
+                </option>
+
+                <option value="Money">
+                  Money
+                </option>
+
+                <option value="Food">
+                  Food
+                </option>
+
+                <option value="Clothing">
+                  Clothing
+                </option>
+
+                <option value="Medicine">
+                  Medicine
+                </option>
+
+                <option value="Equipment">
+                  Equipment
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
               </select>
             </div>
 
             <div className="donationFormGroup">
               <label>
-                Donation Date <span>*</span>
+                Donation Date{" "}
+                <span>*</span>
               </label>
 
               <input
                 type="date"
                 name="donation_date"
-                value={newDonation.donation_date}
-                onChange={handleInputChange}
+                value={
+                  newDonation.donation_date
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="donationFormGroup">
-              <label>Payment Method</label>
+              <label>
+                Payment Method
+              </label>
 
               <select
                 name="payment_method"
-                value={newDonation.payment_method}
-                onChange={handleInputChange}
+                value={
+                  newDonation.payment_method
+                }
+                onChange={
+                  handleInputChange
+                }
               >
-                <option value="">Select method</option>
-                <option value="Cash">Cash</option>
-                <option value="UPI">UPI</option>
+                <option value="">
+                  Select method
+                </option>
+
+                <option value="Cash">
+                  Cash
+                </option>
+
+                <option value="UPI">
+                  UPI
+                </option>
+
                 <option value="Bank Transfer">
                   Bank Transfer
                 </option>
-                <option value="Cheque">Cheque</option>
-                <option value="Other">Other</option>
+
+                <option value="Cheque">
+                  Cheque
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
               </select>
             </div>
 
             <div className="donationFormGroup">
-              <label>Reference Number</label>
+              <label>
+                Reference Number
+              </label>
 
               <input
                 type="text"
                 name="reference_number"
-                value={newDonation.reference_number}
-                onChange={handleInputChange}
+                value={
+                  newDonation.reference_number
+                }
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. DON-2026-005"
               />
             </div>
@@ -392,7 +594,9 @@ function Donations() {
                 type="text"
                 name="purpose"
                 value={newDonation.purpose}
-                onChange={handleInputChange}
+                onChange={
+                  handleInputChange
+                }
                 placeholder="e.g. Medical care support"
               />
             </div>
@@ -403,7 +607,9 @@ function Donations() {
               <textarea
                 name="notes"
                 value={newDonation.notes}
-                onChange={handleInputChange}
+                onChange={
+                  handleInputChange
+                }
                 placeholder="Enter additional details"
                 rows="4"
               />
@@ -422,8 +628,11 @@ function Donations() {
             <button
               type="submit"
               className="donationSaveBtn"
+              disabled={saving}
             >
-              Add Donation
+              {saving
+                ? "Adding..."
+                : "Add Donation"}
             </button>
           </div>
         </form>
@@ -431,6 +640,7 @@ function Donations() {
     );
   }
 
+  // MAIN DONATIONS PAGE
   return (
     <div className="donations">
       <div className="donationPageHeader">
@@ -438,13 +648,16 @@ function Donations() {
           <h2>Donations</h2>
 
           <p>
-            Manage donations and contributions received by the home
+            Manage donations and contributions
+            received by the home
           </p>
         </div>
 
         <button
           className="addDonationBtn"
-          onClick={() => setShowAddForm(true)}
+          onClick={() =>
+            setShowAddForm(true)
+          }
         >
           + Add Donation
         </button>
@@ -455,7 +668,9 @@ function Donations() {
           type="text"
           placeholder="Search donor, donation or reference..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) =>
+            setSearchTerm(e.target.value)
+          }
         />
       </div>
 
@@ -475,65 +690,95 @@ function Donations() {
 
           <tbody>
             {filteredDonations.length > 0 ? (
-              filteredDonations.map((donation) => (
-                <tr key={donation.donation_id}>
-                  <td>
-                    <div className="donorNameCell">
-                      <div className="donorSmallIcon">🎁</div>
+              filteredDonations.map(
+                (donation) => (
+                  <tr
+                    key={
+                      donation.donation_id
+                    }
+                  >
+                    <td>
+                      <div className="donorNameCell">
+                        <div className="donorSmallIcon">
+                          🎁
+                        </div>
 
-                      <strong>{donation.donor_name}</strong>
-                    </div>
-                  </td>
+                        <strong>
+                          {
+                            donation.donor_name
+                          }
+                        </strong>
+                      </div>
+                    </td>
 
-                  <td className="donationAmount">
-                    {formatAmount(donation.amount)}
-                  </td>
+                    <td className="donationAmount">
+                      {formatAmount(
+                        donation.amount
+                      )}
+                    </td>
 
-                  <td>
-                    <span className="donationTypeBadge">
-                      {donation.donation_type}
-                    </span>
-                  </td>
-
-                  <td>
-                    {formatDate(donation.donation_date)}
-                  </td>
-
-                  <td>{donation.payment_method || "—"}</td>
-
-                  <td>
-                    <label className="tableReceivedCheckbox">
-                      <input
-                        type="checkbox"
-                        checked={donation.received}
-                        onChange={() =>
-                          toggleReceived(donation.donation_id)
+                    <td>
+                      <span className="donationTypeBadge">
+                        {
+                          donation.donation_type
                         }
-                      />
-
-                      <span>
-                        {donation.received
-                          ? "Received"
-                          : "Pending"}
                       </span>
-                    </label>
-                  </td>
+                    </td>
 
-                  <td>
-                    <button
-                      className="donationViewBtn"
-                      onClick={() =>
-                        setSelectedDonation(donation)
-                      }
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))
+                    <td>
+                      {formatDate(
+                        donation.donation_date
+                      )}
+                    </td>
+
+                    <td>
+                      {donation.payment_method ||
+                        "—"}
+                    </td>
+
+                    <td>
+                      <label className="tableReceivedCheckbox">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(
+                            donation.received
+                          )}
+                          onChange={() =>
+                            toggleReceived(
+                              donation
+                            )
+                          }
+                        />
+
+                        <span>
+                          {donation.received
+                            ? "Received"
+                            : "Pending"}
+                        </span>
+                      </label>
+                    </td>
+
+                    <td>
+                      <button
+                        className="donationViewBtn"
+                        onClick={() =>
+                          setSelectedDonation(
+                            donation
+                          )
+                        }
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )
             ) : (
               <tr>
-                <td colSpan="7" className="noDonations">
+                <td
+                  colSpan="7"
+                  className="noDonations"
+                >
                   No donations found.
                 </td>
               </tr>
