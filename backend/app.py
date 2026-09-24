@@ -56,7 +56,6 @@ def update_record(table, record_id, fields, data):
     conn.commit()
     conn.close()
 
-
 # ---------------------------------------------------------
 # HOME
 # ---------------------------------------------------------
@@ -1016,10 +1015,20 @@ def update_visitor(visitor_id):
 # =========================================================
 # LOGIN
 # =========================================================
+USERS = {
+    "Admin": {
+        "username": "admin",
+        "password": "admin123"
+    },
+    "Staff": {
+        "username": "staff",
+        "password": "staff123"
+    }
+}
+
 
 @app.route("/api/login", methods=["POST"])
 def login():
-
     try:
         data = request.get_json() or {}
 
@@ -1027,28 +1036,21 @@ def login():
         username = data.get("username")
         password = data.get("password")
 
-        users = {
-            "Admin": {
-                "username": "admin",
-                "password": "admin123"
-            },
-            "Staff": {
-                "username": "staff",
-                "password": "staff123"
-            }
-        }
-
-        if role not in users:
+        if role not in USERS:
             return jsonify({
                 "error": "Invalid role"
             }), 400
 
-        user = users[role]
+        user = USERS[role]
 
-        if username == user["username"] and password == user["password"]:
-
+        if (
+            username == user["username"]
+            and password == user["password"]
+        ):
             return jsonify({
-                "message": f"{role} login successful!"
+                "message": f"{role} login successful!",
+                "role": role,
+                "username": username
             }), 200
 
         return jsonify({
@@ -1056,7 +1058,50 @@ def login():
         }), 401
 
     except Exception as error:
+        return jsonify({
+            "error": str(error)
+        }), 500
 
+
+@app.route("/api/change-password", methods=["POST"])
+def change_password():
+    try:
+        data = request.get_json() or {}
+
+        role = data.get("role")
+        username = data.get("username")
+        current_password = data.get("current_password")
+        new_password = data.get("new_password")
+
+        if role not in USERS:
+            return jsonify({
+                "error": "Invalid role"
+            }), 400
+
+        user = USERS[role]
+
+        if username != user["username"]:
+            return jsonify({
+                "error": "Invalid username"
+            }), 401
+
+        if current_password != user["password"]:
+            return jsonify({
+                "error": "Current password is incorrect"
+            }), 401
+
+        if not new_password:
+            return jsonify({
+                "error": "New password is required"
+            }), 400
+
+        user["password"] = new_password
+
+        return jsonify({
+            "message": "Password changed successfully."
+        }), 200
+
+    except Exception as error:
         return jsonify({
             "error": str(error)
         }), 500
